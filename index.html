@@ -12,41 +12,69 @@
         body { margin: 0; overflow: hidden; background-color: #000; font-family: 'VT323', monospace; color: #00ffcc; touch-action: none; user-select: none; }
         #game-layout { display: flex; flex-direction: column; height: 100vh; width: 100vw; }
         #viewport-container { position: relative; flex-grow: 1; background: #000; overflow: hidden; border-bottom: 2px solid #00ffcc; }
-        #control-deck { height: 280px; background: #00110f; display: flex; padding: 8px; gap: 8px; z-index: 20; }
-        @media (max-height: 600px) { #control-deck { height: 230px; } }
+        
+        /* STREAM WIDGET OPTIMIZED DECK (450px Width Friendly) */
+        #control-deck { 
+            height: 340px; 
+            background: #00110f; 
+            display: grid; 
+            grid-template-columns: 1.3fr 1fr; /* Weapon wider than Movement */
+            grid-template-rows: 1fr 1.1fr;    /* Info panel slightly taller */
+            grid-template-areas: 
+                "weapon movement"
+                "info info";
+            padding: 6px; 
+            gap: 6px; 
+            z-index: 20; 
+        }
+
         canvas { width: 100%; height: 100%; display: block; }
         .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 10px; background: rgba(0, 255, 204, 0.1); animation: scan 4s linear infinite; pointer-events: none; z-index: 5; }
         @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
         .hud-overlay { position: absolute; pointer-events: none; padding: 10px; width: 100%; display: flex; justify-content: space-between; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); z-index: 10; }
-        .deck-panel { background: rgba(0, 20, 15, 0.5); border: 1px solid #00443a; border-radius: 6px; position: relative; }
         
-        .movement-container { display: flex; gap: 5px; height: 100%; }
-        .d-pad { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 4px; padding: 4px; }
-        #minimap { width: 100px; height: 100%; background: #000505; border-left: 1px solid #00443a; image-rendering: pixelated; }
+        .deck-panel { background: rgba(0, 20, 15, 0.5); border: 1px solid #00443a; border-radius: 6px; position: relative; overflow: hidden;}
+        
+        /* MOVEMENT PANEL (Top Right) */
+        .movement-panel-wrapper { grid-area: movement; display: flex; flex-direction: row; }
+        .movement-container { display: flex; width: 100%; height: 100%; }
+        .d-pad { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 2px; padding: 2px; }
+        #minimap { width: 70px; height: 100%; background: #000505; border-left: 1px solid #00443a; image-rendering: pixelated; }
 
-        .t-btn { background: #00221e; border: 1px solid #00ffcc; color: #00ffcc; font-family: 'VT323', monospace; font-size: 1.4rem; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 4px; }
-        .t-btn:active { background: #00ffcc; color: #000; }
-        .t-btn:disabled { border-color: #333; color: #444; background: #111; cursor: default; }
-        .btn-up { grid-column: 2; grid-row: 1; } .btn-left { grid-column: 1; grid-row: 2; } .btn-down { grid-column: 2; grid-row: 2; } .btn-right { grid-column: 3; grid-row: 2; }
-        .weapon-panel { flex: 1.6; display: flex; flex-direction: column; gap: 4px; padding: 4px; }
-        .weapon-header { display: flex; justify-content: space-between; align-items: center; background: #000; border: 1px solid #00443a; padding: 2px 6px; }
-        .weapon-name { font-weight: bold; font-size: 1.1rem; } .weapon-ammo { font-size: 0.9rem; color: #ffee00; }
-        #log-window { flex: 1; background: rgba(0,0,0,0.6); border: 1px solid #00443a; overflow-y: hidden; padding: 2px; font-size: 0.85rem; display: flex; flex-direction: column; }
+        /* WEAPON PANEL (Top Left) */
+        .weapon-panel { grid-area: weapon; display: flex; flex-direction: column; gap: 4px; padding: 4px; }
+        .weapon-header { display: flex; justify-content: space-between; align-items: center; background: #000; border: 1px solid #00443a; padding: 2px 4px; }
+        .weapon-name { font-weight: bold; font-size: 1.0rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } 
+        .weapon-ammo { font-size: 0.9rem; color: #ffee00; margin-left: 4px; }
+        #log-window { flex: 1; background: rgba(0,0,0,0.6); border: 1px solid #00443a; overflow-y: hidden; padding: 2px; font-size: 0.8rem; display: flex; flex-direction: column; }
         .log-entry { margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #00aaff; }
         .log-red { color: #ff5555; } .log-green { color: #55ff55; } .log-yellow { color: #ffee55; } .log-gold { color: #ffaa00; } .log-blue { color: #00aaff; }
-        .btn-fire { background: #2a0000; border-color: #ff3333; color: #ff3333; font-size: 1.5rem; font-weight: bold; height: 45px; }
-        .btn-fire:active { background: #ff3333; color: white; } .btn-fire:disabled { background: #1a1a1a; color: #555; border-color: #555; }
-        .info-panel { flex: 1.4; display: flex; flex-direction: column; padding: 5px; overflow: hidden; gap: 4px; }
+        
+        /* INFO PANEL (Bottom Full Width) */
+        .info-panel { grid-area: info; display: flex; flex-direction: column; padding: 5px; gap: 4px; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 4px; }
         .stat-row { display: flex; justify-content: space-between; width: 100%; border-bottom: 1px solid #00443a; font-size: 0.9rem; }
         .xp-bar-bg { width: 100%; height: 4px; background: #111; margin-top: 2px; } .xp-bar-fill { width: 0%; height: 100%; background: #00ffcc; transition: width 0.3s; }
-        .core-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: #00110f; border: 1px solid #00443a; padding: 2px; margin-bottom: auto; }
-        .core-cell { font-size: 0.8rem; text-align: center; color: #008877; } .core-val { color: #00ffcc; font-weight: bold; }
-        .action-row { display: flex; gap: 4px; }
-        .btn-utility { flex: 1; font-size: 0.9rem; height: 35px; border-color: #0088ff; color: #0088ff; }
+        .core-grid { display: flex; justify-content: space-between; background: #00110f; border: 1px solid #00443a; padding: 2px 8px; font-size: 0.85rem; }
+        .core-cell { color: #008877; } .core-val { color: #00ffcc; font-weight: bold; margin-left: 2px;}
+        
+        .action-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 0.5fr; gap: 4px; margin-top: auto; }
+
+        .t-btn { background: #00221e; border: 1px solid #00ffcc; color: #00ffcc; font-family: 'VT323', monospace; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 4px; }
+        .t-btn:active { background: #00ffcc; color: #000; }
+        .t-btn:disabled { border-color: #333; color: #444; background: #111; cursor: default; }
+        
+        /* Specific Button Tweaks for Small Screen */
+        .btn-up { grid-column: 2; grid-row: 1; } .btn-left { grid-column: 1; grid-row: 2; } .btn-down { grid-column: 2; grid-row: 2; } .btn-right { grid-column: 3; grid-row: 2; }
+        .btn-fire { background: #2a0000; border-color: #ff3333; color: #ff3333; font-size: 1.4rem; font-weight: bold; height: 100%; max-height: 50px; }
+        .btn-fire:active { background: #ff3333; color: white; } .btn-fire:disabled { background: #1a1a1a; color: #555; border-color: #555; }
+        
+        .btn-utility { font-size: 0.9rem; height: 40px; border-color: #0088ff; color: #0088ff; }
         .btn-interact { border-color: #ffaa00; color: #ffaa00; } .btn-interact:disabled { border-color: #333; color: #444; }
         .btn-reload { border-color: #00ff00; color: #00ff00; } .btn-reload:disabled { border-color: #333; color: #444; }
-        .btn-end { flex: 1; background: #332b00; border-color: #ffcc00; color: #ffcc00; height: 35px; }
+        .btn-end { background: #332b00; border-color: #ffcc00; color: #ffcc00; height: 40px; }
         
+        /* Overlays */
         .overlay-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 10, 5, 0.95); display: none; flex-direction: column; z-index: 50; padding: 20px; box-sizing: border-box; }
         .screen-header { text-align: center; color: #ffcc00; font-size: 1.5rem; border-bottom: 1px solid #ffcc00; margin-bottom: 10px; font-weight: bold; }
         .inv-list { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
@@ -216,7 +244,16 @@
     </div>
 
     <div id="control-deck">
-        <div class="deck-panel" style="flex: 1.2;">
+        <div class="deck-panel weapon-panel">
+            <div class="weapon-header">
+                <span id="wpn-name" class="weapon-name rarity-common">LAS-PISTOL</span>
+                <span id="wpn-ammo" class="weapon-ammo">12/12</span>
+            </div>
+            <div id="log-window"><div class="log-entry">> K.A.K. System Online.</div></div>
+            <button class="t-btn btn-fire" id="btn-fire" onclick="playerAttack()">FIRE (3)</button>
+        </div>
+        
+        <div class="deck-panel movement-panel-wrapper">
             <div class="movement-container">
                 <div class="d-pad">
                     <button class="t-btn btn-up" onclick="movePlayer(true)">▲</button>
@@ -227,26 +264,22 @@
                 <canvas id="minimap"></canvas>
             </div>
         </div>
-        
-        <div class="deck-panel weapon-panel">
-            <div class="weapon-header">
-                <span id="wpn-name" class="weapon-name rarity-common">LAS-PISTOL</span>
-                <span id="wpn-ammo" class="weapon-ammo">12/12</span>
-            </div>
-            <div id="log-window"><div class="log-entry">> K.A.K. System Online.</div></div>
-            <button class="t-btn btn-fire" id="btn-fire" onclick="playerAttack()">FIRE (3)</button>
-        </div>
 
         <div class="deck-panel info-panel">
-            <div class="stat-row"><span class="opacity-70">HP</span> <span id="hp-val" class="text-green-400">100/100</span></div>
-            <div class="stat-row"><span class="opacity-70">AP</span> <span id="ap-val" class="text-yellow-400 font-bold">10/10</span></div>
-            <div class="stat-row"><span class="opacity-70">ANM</span> <span id="hud-credits" class="text-blue-400 font-bold">50</span></div>
-            <div class="stat-row" style="border:none;"><span class="opacity-70">XP</span><div style="flex:1; margin-left:10px;"><div class="xp-bar-bg"><div id="xp-bar" class="xp-bar-fill"></div></div></div></div>
+            <div class="stat-grid">
+                <div class="stat-row"><span class="opacity-70">HP</span> <span id="hp-val" class="text-green-400">100/100</span></div>
+                <div class="stat-row"><span class="opacity-70">AP</span> <span id="ap-val" class="text-yellow-400 font-bold">10/10</span></div>
+                <div class="stat-row"><span class="opacity-70">ANM</span> <span id="hud-credits" class="text-blue-400 font-bold">50</span></div>
+                <div class="stat-row" style="border:none; flex-direction:column; align-items:flex-start;">
+                    <div style="display:flex; width:100%; justify-content:space-between;"><span class="opacity-70">XP</span></div>
+                    <div class="xp-bar-bg"><div id="xp-bar" class="xp-bar-fill"></div></div>
+                </div>
+            </div>
             <div class="core-grid">
-                <div class="core-cell">C: <span id="core-c" class="core-val">0</span></div>
-                <div class="core-cell">O: <span id="core-o" class="core-val">0</span></div>
-                <div class="core-cell">R: <span id="core-r" class="core-val">0</span></div>
-                <div class="core-cell">E: <span id="core-e" class="core-val">0</span></div>
+                <span>C:<span id="core-c" class="core-val">0</span></span>
+                <span>O:<span id="core-o" class="core-val">0</span></span>
+                <span>R:<span id="core-r" class="core-val">0</span></span>
+                <span>E:<span id="core-e" class="core-val">0</span></span>
             </div>
             <div class="action-row">
                 <button class="t-btn btn-utility" id="btn-inv" onclick="openInventory()">BAG</button>
@@ -356,7 +389,9 @@
                 STATE.loop = data.loop || 1;
                 document.getElementById('save-status').innerText = "SAVE DATA LOADED";
                 document.getElementById('save-status').className = "text-xs text-green-500";
-                document.getElementById('start-debt').innerText = STATE.player.debt.toLocaleString();
+                
+                // RESTORE DEBT TO NORMAL - NO OVERRIDE
+                // document.getElementById('start-debt').innerText = STATE.player.debt.toLocaleString();
             } catch (e) { console.error("Save Corrupt", e); }
         } else {
             document.getElementById('save-status').innerText = "NO SAVE DATA FOUND (NEW GAME)";
@@ -982,6 +1017,7 @@
         window.addEventListener('resize', ()=>{ const nw=wrap.clientWidth, nh=wrap.clientHeight; camera.aspect=nw/nh; camera.updateProjectionMatrix(); renderer.setSize(nw,nh); });
     }
 
+    // ... (renderMap, drawMinimap, visualizeBeam kept same) ...
     function renderMap() {
         objects.forEach(o => scene.remove(o)); objects = []; STATE.gridMeshes = Array(GRID_H).fill().map(()=>Array(GRID_W).fill().map(()=>[]));
         
