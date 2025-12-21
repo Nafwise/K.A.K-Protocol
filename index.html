@@ -31,6 +31,13 @@
         canvas { width: 100%; height: 100%; display: block; }
         .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 10px; background: rgba(0, 255, 204, 0.1); animation: scan 4s linear infinite; pointer-events: none; z-index: 5; }
         @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
+        
+        .crt::before { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); z-index: 6; background-size: 100% 2px, 3px 100%; pointer-events: none; }
+        
+        /* Class to remove CRT effects for stream bitrate optimization */
+        .clean-mode .scan-line { display: none; }
+        .clean-mode.crt::before { display: none; }
+
         .hud-overlay { position: absolute; pointer-events: none; padding: 10px; width: 100%; display: flex; justify-content: space-between; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); z-index: 10; }
         
         .deck-panel { background: rgba(0, 20, 15, 0.5); border: 1px solid #00443a; border-radius: 6px; position: relative; overflow: hidden;}
@@ -118,11 +125,14 @@
         }
     </style>
 </head>
-<body>
+<body onkeydown="if(event.key==='0') toggleCRT()">
 
 <div id="game-layout">
     <div id="viewport-container" class="crt">
         <div class="scan-line"></div>
+        <!-- CRT TOGGLE BUTTON -->
+        <button onclick="toggleCRT()" style="position:absolute; top:10px; right:10px; z-index:30; background:rgba(0,0,0,0.5); color:#00ffcc; border:1px solid #00ffcc; font-family:'VT323'; font-size:0.8rem; padding:2px 5px; cursor:pointer;">CRT</button>
+
         <div id="floating-layer" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:15;"></div>
         <div class="hud-overlay z-10">
             <div>
@@ -347,7 +357,8 @@
         { text: "Thorne punched a server rack. Repairs needed.", effect: (p) => { p.credits = Math.max(0, p.credits - 50); return "-50 ANM"; } },
         { text: "Tuck found a glitch in the healing algorithm.", effect: (p) => { p.medkits++; return "+1 MEDKIT"; } },
         { text: "Market Crash. Debt interest spiked.", effect: (p) => { p.debt += 500; return "+500 DEBT"; } },
-        { text: "Corporate Holiday (Unpaid).", effect: (p) => { return "No Effect"; } }
+        { text: "Corporate Holiday (Unpaid).", effect: (p) => { return "No Effect"; } },
+        { text: "Stream Chat donated a Care Package.", effect: (p) => { p.credits += 25; p.medkits++; return "+25 ANM, +1 MED"; } }
     ];
 
     const STATE = {
@@ -358,8 +369,20 @@
         explored: Array(GRID_H).fill().map(()=>Array(GRID_W).fill(false)), 
         visible: Array(GRID_H).fill().map(()=>Array(GRID_W).fill(false)),
         gridMeshes: Array(GRID_H).fill().map(()=>Array(GRID_W).fill().map(()=>[])),
-        floatingTexts: [], shakeStrength: 0
+        floatingTexts: [], shakeStrength: 0,
+        hubShopInventory: {} 
     };
+
+    function recalculateMaxAp() {
+        STATE.player.maxAp = AP_BASE + Math.floor(STATE.player.stats.opt / 5);
+        if (STATE.player.ap > STATE.player.maxAp) STATE.player.ap = STATE.player.maxAp; 
+    }
+
+    function toggleCRT() {
+        const vp = document.getElementById('viewport-container');
+        vp.classList.toggle('clean-mode');
+        log(vp.classList.contains('clean-mode') ? "CRT: OFF" : "CRT: ON", "log-blue");
+    }
 
     // --- SAVE / LOAD SYSTEM ---
     function saveGame() {
@@ -387,12 +410,16 @@
                 const data = JSON.parse(saved);
                 Object.assign(STATE.player, data);
                 STATE.loop = data.loop || 1;
+                recalculateMaxAp(); // Ensure AP is correct on load
                 document.getElementById('save-status').innerText = "SAVE DATA LOADED";
                 document.getElementById('save-status').className = "text-xs text-green-500";
-                document.getElementById('start-debt').innerText = STATE.player.debt.toLocaleString();
+                
+                // RESTORE DEBT TO NORMAL - NO OVERRIDE
+                // document.getElementById('start-debt').innerText = STATE.player.debt.toLocaleString();
             } catch (e) { console.error("Save Corrupt", e); }
         } else {
             document.getElementById('save-status').innerText = "NO SAVE DATA FOUND (NEW GAME)";
+            recalculateMaxAp();
         }
     }
 
@@ -406,8 +433,9 @@
         document.getElementById('start-overlay').style.display = 'none';
         if(STATE.player.inventory.length === 0) {
             STATE.player.inventory.push(createWeapon('Intern\'s Shiv', 'C'));
-            STATE.player.inventory.push(createWeapon('Pink Slip', 'U'));
+            STATE.player.inventory.push(createWeapon('Pink Slip', 'C')); // Corrected to Common ('C')
         }
+        recalculateMaxAp();
         startStage(0);
         updateCameraTransform(true);
         animate();
@@ -453,9 +481,11 @@
         updateVisibility();
         scene.fog = new THREE.FogExp2(STAGES[stageIdx].fog, 0.04); 
         scene.background = new THREE.Color(STAGES[stageIdx].fog); 
+        updateCameraTransform(true); 
         updateUI();
     }
 
+    // ... (createWeapon, generateHub, generateMap, spawnSingleEnemy kept same) ...
     function createWeapon(baseName, rarityKey) {
         const base = WEAPON_BASE[baseName]; const r = RARITY_TIERS[rarityKey];
         return { name: baseName, baseName: baseName, rarity: rarityKey, type: base.type, ap: base.ap, range: base.range, minDmg: Math.floor(base.dmg[0]*r.mult), maxDmg: Math.floor(base.dmg[1]*r.mult), color: base.color, verb: base.verb, rarityName: r.name, rarityClass: r.colorClass, maxAmmo: base.ammo, currentAmmo: base.ammo, hits: base.hits || 1 };
@@ -470,6 +500,29 @@
         STATE.map[3][9] = 5; STATE.mapObjects[`9,3`] = { type: 'npc_tuck' };
         STATE.map[6][6] = 5; STATE.mapObjects[`6,6`] = { type: 'npc_gib' };
         STATE.map[10][6] = 9; STATE.mapObjects[`6,10`] = { type: 'exit' };
+
+        // --- NEW: Generate One-Time Shop Inventory for this Visit ---
+        STATE.hubShopInventory = { 'vendor_w': [], 'vendor_a': [], 'vendor_i': [] };
+
+        // Thorne (Weapons) - 3 Random Items
+        for(let i=0; i<3; i++) { 
+            const keys = Object.keys(WEAPON_BASE); const wpnName = keys[Math.floor(Math.random() * keys.length)]; 
+            const rarities = ['U','R','E','A','L']; 
+            const rBoost = Math.min(STATE.loop - 1, 2);
+            const rIndex = Math.min(rarities.length-1, Math.floor(Math.random() * (2 + STATE.nextStage + rBoost))); 
+            const r = rarities[rIndex]; const wpn = createWeapon(wpnName, r); 
+            const price = (rIndex + 1) * 50 + 20;
+            const typeTag = wpn.type === 'MELEE' ? '[MELEE]' : '[RANGED]';
+            STATE.hubShopInventory['vendor_w'].push({ type: 'w', obj: wpn, price, label: `<span class="${RARITY_TIERS[r].colorClass}">${r} ${wpnName}</span> <span class="text-xs text-gray-500">${typeTag}</span>` });
+        }
+
+        // Tuck (Upgrades) - 1 of each
+        STATE.hubShopInventory['vendor_a'].push({ type: 'u', id: 'plate', price: 100, label: "Blessed Plating (+1 DEF)" });
+        STATE.hubShopInventory['vendor_a'].push({ type: 'u', id: 'core', price: 75, label: "Core Integrity (+20 MaxHP)" });
+
+        // Gib (Items) - 1 of each
+        STATE.hubShopInventory['vendor_i'].push({ type: 'i', id: 'med', price: 40, label: "Lathander's Aid (Medkit)" });
+        STATE.hubShopInventory['vendor_i'].push({ type: 'i', id: 'ammo', price: 30, label: "Full Ammo Refill" });
     }
 
     function generateMap() {
@@ -653,12 +706,25 @@
     }
 
     function movePlayer(fwd) {
-        if(STATE.isAnimating || STATE.turn!=='PLAYER' || STATE.player.ap < 1) return;
+        if(STATE.isAnimating || STATE.turn!=='PLAYER') return;
+        
+        // Free Roam Check
+        const enemiesPresent = STATE.enemies.some(e => e.active);
+        
+        // If enemies present and no AP, block
+        if(enemiesPresent && STATE.player.ap < 1) return;
+
         const dx=[0, 1, 1, 1, 0, -1, -1, -1]; const dz=[-1, -1, 0, 1, 1, 1, 0, -1];
         const m=fwd?1:-1;
         const nx=STATE.player.gridX+(dx[STATE.player.dir]*m); const nz=STATE.player.gridZ+(dz[STATE.player.dir]*m);
         if(!checkCollision(nx,nz)) {
-            STATE.player.gridX=nx; STATE.player.gridZ=nz; STATE.player.ap--; 
+            STATE.player.gridX=nx; STATE.player.gridZ=nz; 
+            
+            // Only deduct AP if enemies are alive
+            if(enemiesPresent) {
+                STATE.player.ap--; 
+            }
+            
             updateCameraTransform(false); updateVisibility(); updateUI();
         } else log("Blocked", "log-yellow");
     }
@@ -837,22 +903,53 @@
     }
     function sellItem(index, e) { e.stopPropagation(); if (index === STATE.player.equippedIndex) return; if (STATE.player.inventory.length <= 1) { log("Gib says: No refunds on empty hands.", "log-red"); return; } const item = STATE.player.inventory[index]; const val = RARITY_TIERS[item.rarity].value; STATE.player.credits += val; payDebt(val); STATE.player.inventory.splice(index, 1); if (index < STATE.player.equippedIndex) STATE.player.equippedIndex--; log(`Sold ${item.name} for ${val} Animus`, "log-green"); renderInventoryList(); updateUI(); }
     function useMedkit() { if (STATE.player.medkits > 0 && STATE.player.ap >= 2) { STATE.player.medkits--; STATE.player.ap -= 2; STATE.player.hp = Math.min(STATE.player.hp + 30, STATE.player.maxHp); renderInventoryList(); updateUI(); log("Used Lathander's Aid (+30 HP)", "log-green"); spawnFloatingText(STATE.player.gridX, STATE.player.gridZ, "+30 HP", "#0f0"); } else alert("Cannot use."); }
+    
+    // UPDATED SHOP LOGIC
     function openShop(type) {
-        document.getElementById('shop-overlay').style.display = 'flex'; const title = document.getElementById('shop-title'); const list = document.getElementById('shop-list'); list.innerHTML = ''; document.getElementById('shop-credits').innerText = STATE.player.credits; let items = [];
-        if (type === 'vendor_w') {
-            title.innerText = "THORNE'S ARMORY"; title.style.color = "#ff3333";
-            for(let i=0; i<3; i++) { 
-                const keys = Object.keys(WEAPON_BASE); const wpnName = keys[Math.floor(Math.random() * keys.length)]; 
-                const rarities = ['U','R','E','A','L']; 
-                const rBoost = Math.min(STATE.loop - 1, 2);
-                const rIndex = Math.min(rarities.length-1, Math.floor(Math.random() * (2 + STATE.nextStage + rBoost))); 
-                const r = rarities[rIndex]; const wpn = createWeapon(wpnName, r); const price = (rIndex + 1) * 50 + 20; items.push({ type: 'w', obj: wpn, price, label: `<span class="${RARITY_TIERS[r].colorClass}">${r} ${wpnName}</span>` }); 
-            }
-        } else if (type === 'vendor_a') { title.innerText = "TUCK'S INFIRMARY"; title.style.color = "#3388ff"; items.push({ type: 'u', id: 'plate', price: 100, label: "Blessed Plating (+1 DEF)" }); items.push({ type: 'u', id: 'core', price: 75, label: "Core Integrity (+20 MaxHP)" });
-        } else { title.innerText = "GIB'S EMPORIUM"; title.style.color = "#ffff33"; items.push({ type: 'i', id: 'med', price: 40, label: "Lathander's Aid (Medkit)" }); items.push({ type: 'i', id: 'ammo', price: 30, label: "Full Ammo Refill" }); }
-        items.forEach(it => { const div = document.createElement('div'); div.className = "inv-item"; div.innerHTML = `<div>${it.label}</div> <div class="text-blue-400">${it.price} ANM</div>`; const btn = document.createElement('button'); btn.className = "buy-btn"; btn.innerText = "BUY";
-            btn.onclick = (e) => { e.stopPropagation(); if(STATE.player.credits >= it.price) { STATE.player.credits -= it.price; document.getElementById('shop-credits').innerText = STATE.player.credits; buyItem(it); btn.disabled = true; btn.innerText = "SOLD"; } else alert("Not enough Animus!"); }; div.appendChild(btn); list.appendChild(div); });
+        document.getElementById('shop-overlay').style.display = 'flex'; 
+        const title = document.getElementById('shop-title'); 
+        
+        if (type === 'vendor_w') { title.innerText = "THORNE'S ARMORY"; title.style.color = "#ff3333"; }
+        else if (type === 'vendor_a') { title.innerText = "TUCK'S INFIRMARY"; title.style.color = "#3388ff"; }
+        else { title.innerText = "GIB'S EMPORIUM"; title.style.color = "#ffff33"; }
+
+        // Render from persistent inventory
+        renderShopItems(type);
     }
+
+    function renderShopItems(type) {
+        const list = document.getElementById('shop-list'); 
+        list.innerHTML = ''; 
+        document.getElementById('shop-credits').innerText = STATE.player.credits;
+        
+        const items = STATE.hubShopInventory[type];
+        
+        if (!items || items.length === 0) {
+            list.innerHTML = '<div class="text-center text-gray-500 mt-4">SOLD OUT</div>';
+            return;
+        }
+
+        items.forEach((it, idx) => { 
+            const div = document.createElement('div'); div.className = "inv-item"; 
+            div.innerHTML = `<div>${it.label}</div> <div class="text-blue-400">${it.price} ANM</div>`; 
+            const btn = document.createElement('button'); btn.className = "buy-btn"; btn.innerText = "BUY";
+            btn.onclick = (e) => { 
+                e.stopPropagation(); 
+                if(STATE.player.credits >= it.price) { 
+                    STATE.player.credits -= it.price; 
+                    buyItem(it); 
+                    
+                    // Remove from inventory once bought
+                    STATE.hubShopInventory[type].splice(idx, 1);
+                    
+                    // Re-render list
+                    renderShopItems(type);
+                } else alert("Not enough Animus!"); 
+            }; 
+            div.appendChild(btn); list.appendChild(div); 
+        });
+    }
+
     function buyItem(it) { if(it.type === 'w') { STATE.player.inventory.push(it.obj); log(`Thorne grunts approval.`, "log-green"); } else if (it.type === 'u') { if(it.id === 'plate') { STATE.player.defense++; log("Tuck blesses you (+DEF).", "log-green"); } if(it.id === 'core') { STATE.player.maxHp += 20; STATE.player.hp += 20; log("Constitution Buffed (+MaxHP)", "log-green"); } } else if (it.type === 'i') { if(it.id === 'med') { STATE.player.medkits++; log("Bought Medkit", "log-green"); } if(it.id === 'ammo') { STATE.player.inventory.forEach(w => { if(w.maxAmmo!==-1) w.currentAmmo=w.maxAmmo; }); log("Ammo Refilled", "log-green"); } } updateUI(); }
     function closeOverlays() { document.querySelectorAll('.overlay-screen').forEach(el => el.style.display = 'none'); }
     function getHitChance(dist) { return Math.max(10, Math.min(100, (90 + STATE.player.stats.combat*2) - dist*5)); }
@@ -1000,7 +1097,7 @@
     function gainXp(amount) { STATE.player.xp += amount; if (STATE.player.xp >= STATE.player.nextLevelXp) levelUp(); updateUI(); }
     function levelUp() { STATE.player.level++; STATE.player.xp -= STATE.player.nextLevelXp; STATE.player.nextLevelXp = Math.floor(STATE.player.nextLevelXp * 1.5); STATE.player.statPoints++; STATE.player.hp = STATE.player.maxHp; log("LEVEL UP!", "log-green"); spawnFloatingText(STATE.player.gridX, STATE.player.gridZ, "LEVEL UP!", "#0f0"); }
     function openLevelScreen() { if(STATE.player.statPoints>0) { document.getElementById('level-overlay').style.display = 'flex'; updateStatScreen(); } }
-    function upgradeStat(stat) { if(STATE.player.statPoints<=0) return; STATE.player.stats[stat]++; STATE.player.statPoints--; if(stat==='res') { STATE.player.maxHp+=10; STATE.player.hp+=10; } updateStatScreen(); updateUI(); if(STATE.player.statPoints===0) closeOverlays(); }
+    function upgradeStat(stat) { if(STATE.player.statPoints<=0) return; STATE.player.stats[stat]++; STATE.player.statPoints--; if(stat==='res') { STATE.player.maxHp+=10; STATE.player.hp+=10; } if(stat==='opt') { recalculateMaxAp(); } updateStatScreen(); updateUI(); if(STATE.player.statPoints===0) closeOverlays(); }
     function updateStatScreen() { ['combat','opt','res','eng'].forEach(s => document.getElementById(`stat-val-${s}`).innerText=STATE.player.stats[s]); }
 
     // --- RENDER & MINIMAP ---
@@ -1111,6 +1208,10 @@
         if(inst) { 
             camera.position.set(tx + shakeX, 0, tz + shakeZ); 
             camera.rotation.y=rots[STATE.player.dir]; 
+            // FIX: Sync target props so animation doesn't drift if triggered later
+            STATE.targetCamPos = new THREE.Vector3(tx, 0, tz);
+            STATE.targetCamRot = rots[STATE.player.dir];
+            STATE.isAnimating = false;
         } else { 
             STATE.targetCamPos=new THREE.Vector3(tx,0,tz); 
             STATE.targetCamRot=rots[STATE.player.dir]; 
