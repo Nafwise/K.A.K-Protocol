@@ -389,9 +389,7 @@
                 STATE.loop = data.loop || 1;
                 document.getElementById('save-status').innerText = "SAVE DATA LOADED";
                 document.getElementById('save-status').className = "text-xs text-green-500";
-                
-                // RESTORE DEBT TO NORMAL - NO OVERRIDE
-                // document.getElementById('start-debt').innerText = STATE.player.debt.toLocaleString();
+                document.getElementById('start-debt').innerText = STATE.player.debt.toLocaleString();
             } catch (e) { console.error("Save Corrupt", e); }
         } else {
             document.getElementById('save-status').innerText = "NO SAVE DATA FOUND (NEW GAME)";
@@ -438,7 +436,7 @@
         STATE.explored = Array(GRID_H).fill().map(()=>Array(GRID_W).fill(true));
         STATE.visible = Array(GRID_H).fill().map(()=>Array(GRID_W).fill(true));
         updateVisuals();
-        scene.fog = new THREE.FogExp2(0x000510, 0.05); 
+        scene.fog = new THREE.FogExp2(0x000510, 0.025); 
         scene.background = new THREE.Color(0x000510);
         updateCameraTransform(true);
         updateUI();
@@ -453,7 +451,7 @@
         STATE.explored = Array(GRID_H).fill().map(()=>Array(GRID_W).fill(false));
         STATE.visible = Array(GRID_H).fill().map(()=>Array(GRID_W).fill(false));
         updateVisibility();
-        scene.fog = new THREE.FogExp2(STAGES[stageIdx].fog, 0.08); 
+        scene.fog = new THREE.FogExp2(STAGES[stageIdx].fog, 0.04); 
         scene.background = new THREE.Color(STAGES[stageIdx].fog); 
         updateUI();
     }
@@ -1010,7 +1008,7 @@
     function initThree() {
         const wrap = document.getElementById('canvas-wrapper');
         const w = wrap.clientWidth, h = wrap.clientHeight;
-        scene = new THREE.Scene(); scene.background = new THREE.Color(0x000505); scene.fog = new THREE.FogExp2(0x000505, 0.05);
+        scene = new THREE.Scene(); scene.background = new THREE.Color(0x000505); scene.fog = new THREE.FogExp2(0x000505, 0.025);
         camera = new THREE.PerspectiveCamera(80, w/h, 0.1, 1000);
         renderer = new THREE.WebGLRenderer({ antialias: true }); renderer.setSize(w, h); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); wrap.appendChild(renderer.domElement);
         scene.add(new THREE.AmbientLight(0x404040)); const dl = new THREE.DirectionalLight(0xffffff, 0.5); dl.position.set(10, 20, 10); scene.add(dl); const pl = new THREE.PointLight(0x00ffcc, 0.8, 25); pl.position.set(0, 2, 0); camera.add(pl); scene.add(camera);
@@ -1144,7 +1142,12 @@
         renderer.render(scene, camera); 
     }
 
-    function log(m, c="") { const l=document.getElementById('log-window'), d=document.createElement('div'); d.className=`log-entry ${c}`; d.innerText=`> ${m}`; l.appendChild(d); if(l.children.length>5) l.removeChild(l.firstChild); }
+    function log(m, c="") { 
+        const l=document.getElementById('log-window'), d=document.createElement('div'); 
+        d.className=`log-entry ${c}`; d.innerText=`> ${m}`; 
+        l.appendChild(d); 
+        if(l.children.length>3) l.removeChild(l.firstChild); 
+    }
     
     function updateUI() {
         const p = STATE.player; document.getElementById('hp-val').innerText = `${p.hp}/${p.maxHp}`; document.getElementById('ap-val').innerText = `${p.ap}/${p.maxAp}`; 
