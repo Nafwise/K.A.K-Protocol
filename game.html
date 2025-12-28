@@ -9,293 +9,274 @@
         @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
         
         body { 
-            margin: 0; 
-            overflow: hidden; 
-            background: #000; 
-            font-family: 'Space Mono', monospace;
-            color: #0f0;
+            margin: 0; overflow: hidden; background: #000; 
+            font-family: 'Space Mono', monospace; color: #0f0;
         }
 
         /* --- LAYERS --- */
         #layer-world {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1;
-            border: none;
-            transition: filter 0.3s;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; border: none; transition: filter 0.5s;
         }
         
-        /* Blur background when menu is open */
-        body.menu-open #layer-world {
-            filter: blur(5px) brightness(0.4);
-        }
+        body.menu-open #layer-world { filter: blur(8px) brightness(0.3); }
 
         #layer-ui {
-            position: absolute;
-            top: 40px; left: 40px; right: 40px; bottom: 40px;
-            z-index: 10;
-            pointer-events: none; /* Let clicks pass through to map when UI is hidden */
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10; pointer-events: none;
+            display: flex; justify-content: center; align-items: center;
         }
 
         .app-frame {
-            width: 100%;
-            height: 100%;
-            border: 2px solid #334155;
-            background: rgba(2, 6, 23, 0.95);
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
-            border-radius: 12px;
-            pointer-events: auto; /* Re-enable clicks for the app */
-            display: none; /* Hidden by default */
-            opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 0.3s, transform 0.3s;
+            position: absolute; width: 90%; height: 85%;
+            border: 1px solid #334155; background: rgba(2, 6, 23, 0.95);
+            box-shadow: 0 0 50px rgba(0,0,0,0.9); border-radius: 8px;
+            pointer-events: auto; opacity: 0; transform: scale(0.95) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none; /* Inactive by default */
         }
 
         .app-frame.active {
-            display: block;
-            opacity: 1;
-            transform: scale(1);
+            opacity: 1; transform: scale(1) translateY(0);
+            pointer-events: auto; z-index: 20;
         }
 
         /* --- HUD --- */
-        #hud-layer {
-            position: absolute;
-            z-index: 20;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-        }
+        #hud-layer { position: absolute; z-index: 30; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
 
         .npc-comms {
-            position: absolute;
-            bottom: 30px;
-            left: 30px;
-            width: 400px;
-            background: rgba(15, 23, 42, 0.95);
-            border-left: 4px solid #F59E0B; /* Gib Gold */
-            padding: 20px;
-            color: #F8FAFC;
-            font-size: 0.95rem;
-            transform: translateX(-150%);
+            position: absolute; bottom: 30px; left: 30px; width: 400px;
+            background: rgba(15, 23, 42, 0.95); border-left: 4px solid #F59E0B;
+            padding: 20px; color: #F8FAFC; transform: translateX(-150%);
             transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-            box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
-            border-radius: 0 8px 8px 0;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.5); pointer-events: auto;
         }
+        .npc-comms.active { transform: translateX(0); }
+        .npc-name { font-weight: bold; text-transform: uppercase; display: block; margin-bottom: 5px; }
 
-        .npc-comms.active {
-            transform: translateX(0);
+        #notification-area {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; gap: 10px; align-items: center;
         }
-
-        .npc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
-        .npc-name { font-weight: bold; text-transform: uppercase; font-size: 1.1rem; }
-        
-        .npc-gib { border-color: #F59E0B; }
-        .npc-gib .npc-name { color: #F59E0B; }
-        
-        .npc-thorne { border-color: #EF4444; }
-        .npc-thorne .npc-name { color: #EF4444; }
-        
-        .npc-tuck { border-color: #38BDF8; }
-        .npc-tuck .npc-name { color: #38BDF8; }
-
-        #interaction-prompt {
-            position: absolute;
-            top: 65%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.8);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            opacity: 0;
-            transition: opacity 0.2s;
-            text-align: center;
+        .notif {
+            background: rgba(16, 185, 129, 0.9); color: #022c22; padding: 10px 20px;
+            border-radius: 4px; font-weight: bold; animation: slideDown 0.3s forwards;
+            border: 1px solid #34d399;
         }
+        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        #hotbar {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
+        #hotbar { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; pointer-events: auto; }
+        .hotkey { 
+            background: rgba(15, 23, 42, 0.8); border: 1px solid #334155; 
+            color: #94A3B8; padding: 5px 12px; font-size: 0.8rem; border-radius: 4px; cursor: pointer;
         }
+        .hotkey:hover { background: #1e293b; color: #fff; border-color: #F59E0B; }
 
-        .hotkey {
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid #334155;
-            color: #94A3B8;
-            padding: 5px 12px;
-            font-size: 0.8rem;
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        /* --- GLOBAL SETTINGS MODAL --- */
+        #settings-modal {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 50;
+            display: none; justify-content: center; align-items: center;
+            pointer-events: auto;
         }
-        .hotkey span { color: #fff; font-weight: bold; font-size: 1.1rem; }
+        #settings-modal.active { display: flex; }
+        .modal-card {
+            background: #0f172a; border: 1px solid #334155; padding: 30px; border-radius: 8px; width: 400px;
+        }
 
     </style>
 </head>
 <body>
 
-    <!-- LAYER 1: THE GAME WORLD -->
-    <!-- Allow microphone/camera permissions if apps need them -->
     <iframe id="layer-world" src="map.html" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
 
-    <!-- LAYER 2: APP OVERLAYS (Preloaded) -->
     <div id="layer-ui">
         <iframe id="app-sheet" class="app-frame" src="sheet.html"></iframe>
         <iframe id="app-tome" class="app-frame" src="tome.html"></iframe>
         <iframe id="app-loot" class="app-frame" src="loot.html"></iframe>
         <iframe id="app-campaign" class="app-frame" src="campaign.html"></iframe>
-        <!-- Token/Homebrew/Compendium could be added here if needed -->
     </div>
 
-    <!-- LAYER 3: HUD -->
     <div id="hud-layer">
         <div id="hotbar">
-            <div class="hotkey"><span>TAB</span> SHEET</div>
-            <div class="hotkey"><span>I</span> LOOT</div>
-            <div class="hotkey"><span>C</span> COMBAT</div>
-            <div class="hotkey"><span>L</span> LORE</div>
-            <div class="hotkey"><span>ESC</span> BACK</div>
+            <div class="hotkey" onclick="toggleApp('sheet')">TAB: SHEET</div>
+            <div class="hotkey" onclick="toggleApp('loot')">I: LOOT</div>
+            <div class="hotkey" onclick="toggleApp('tome')">C: COMBAT</div>
+            <div class="hotkey" onclick="openSettings()">ESC: SYSTEM</div>
         </div>
 
-        <div id="interaction-prompt">
-            <div style="font-size: 1.2rem; font-weight: bold; color: #fbbf24;">[E]</div>
-            <span id="prompt-text">INTERACT</span>
-        </div>
+        <div id="notification-area"></div>
 
-        <!-- NPC COMMS BOX -->
-        <div id="npc-box" class="npc-comms npc-gib">
-            <div class="npc-header">
-                <span class="npc-name" id="npc-name">Gib</span>
+        <div id="npc-box" class="npc-comms">
+            <span class="npc-name" id="npc-name">GIB</span>
+            <div id="npc-text">System initializing...</div>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settings-modal">
+        <div class="modal-card">
+            <h2 class="text-xl font-bold text-white mb-4">SYSTEM CONFIGURATION</h2>
+            <div class="mb-4">
+                <label class="block text-slate-400 text-sm mb-2">Gemini API Key (Automation Core)</label>
+                <input type="password" id="api-key-input" class="w-full bg-slate-900 border border-slate-700 p-2 text-white rounded" placeholder="Paste Key Here...">
             </div>
-            <div id="npc-text">System initialization complete. Welcome back to the Demesne, Subject 44.</div>
+            <button onclick="saveSettings()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded">INITIALIZE CORE</button>
+            <button onclick="closeSettings()" class="w-full mt-2 text-slate-500 hover:text-white text-sm">Cancel</button>
         </div>
     </div>
 
     <script>
-        const worldFrame = document.getElementById('layer-world');
-        const uiLayer = document.getElementById('layer-ui');
-        const npcBox = document.getElementById('npc-box');
-        const npcName = document.getElementById('npc-name');
-        const npcText = document.getElementById('npc-text');
-        const prompt = document.getElementById('interaction-prompt');
-        const promptText = document.getElementById('prompt-text');
-
-        let activeApp = null;
-        
-        // --- NPC SYSTEM ---
-        const NPCs = {
-            GIB: { name: 'Gib (Handler)', class: 'npc-gib' },
-            THORNE: { name: 'Thorne (Security)', class: 'npc-thorne' },
-            TUCK: { name: 'Tuck (Dev)', class: 'npc-tuck' }
+        // --- GLOBAL STATE ---
+        const GameState = {
+            activeApp: null,
+            apiKey: localStorage.getItem('akashic_api_key') || '',
+            inventory: [],
+            hp: 100,
+            zone: 'The Nexus' // Current location
         };
 
-        function speak(npc, text, duration = 6000) {
-            npcBox.className = `npc-comms ${npc.class} active`;
-            npcName.innerText = npc.name;
-            npcText.innerText = text;
-            
-            // Auto hide after duration
-            if (window.npcTimeout) clearTimeout(window.npcTimeout);
-            window.npcTimeout = setTimeout(() => {
-                npcBox.classList.remove('active');
-            }, duration);
+        const frames = {
+            sheet: document.getElementById('app-sheet'),
+            loot: document.getElementById('app-loot'),
+            tome: document.getElementById('app-tome'),
+            campaign: document.getElementById('app-campaign'),
+            world: document.getElementById('layer-world')
+        };
+
+        // --- NPC SYSTEM ---
+        function speak(name, text, color = '#F59E0B') {
+            const box = document.getElementById('npc-box');
+            document.getElementById('npc-name').innerText = name;
+            document.getElementById('npc-name').style.color = color;
+            document.getElementById('npc-text').innerText = text;
+            box.style.borderLeftColor = color;
+            box.classList.add('active');
+            setTimeout(() => box.classList.remove('active'), 5000);
         }
 
-        // --- APP MANAGER ---
+        function notify(msg) {
+            const el = document.createElement('div');
+            el.className = 'notif';
+            el.innerText = msg;
+            document.getElementById('notification-area').appendChild(el);
+            setTimeout(() => el.remove(), 4000);
+        }
+
+        // --- SETTINGS MANAGER ---
+        function openSettings() {
+            document.getElementById('settings-modal').classList.add('active');
+            document.getElementById('api-key-input').value = GameState.apiKey;
+            frames.world.contentWindow.postMessage({ type: 'PAUSE_GAME' }, '*');
+        }
+
+        function closeSettings() {
+            document.getElementById('settings-modal').classList.remove('active');
+            frames.world.contentWindow.postMessage({ type: 'RESUME_GAME' }, '*');
+        }
+
+        function saveSettings() {
+            const key = document.getElementById('api-key-input').value;
+            if(key) {
+                GameState.apiKey = key;
+                localStorage.setItem('akashic_api_key', key);
+                notify("NEURAL LINK: API Key Saved");
+                syncApps(); // Send key to all apps
+                closeSettings();
+            }
+        }
+
+        function syncApps() {
+            // Broadcast API key and State to all apps
+            const packet = { type: 'SYNC_STATE', apiKey: GameState.apiKey, zone: GameState.zone };
+            Object.values(frames).forEach(f => {
+                if(f.contentWindow) f.contentWindow.postMessage(packet, '*');
+            });
+        }
+
+        // --- APP SWITCHING ---
         function toggleApp(appName) {
             const app = document.getElementById(`app-${appName}`);
-            if (!app) return;
-
-            if (activeApp === appName) {
-                // Close current
+            if (GameState.activeApp === appName) {
+                // Close
                 app.classList.remove('active');
-                activeApp = null;
+                GameState.activeApp = null;
                 document.body.classList.remove('menu-open');
-                
-                // Tell Map to resume
-                worldFrame.contentWindow.postMessage({ type: 'RESUME_GAME' }, '*');
-                
-                // Refocus map so controls work immediately
-                setTimeout(() => worldFrame.contentWindow.focus(), 100);
+                frames.world.contentWindow.postMessage({ type: 'RESUME_GAME' }, '*');
+                setTimeout(() => frames.world.contentWindow.focus(), 100);
             } else {
-                // Close others first
-                document.querySelectorAll('.app-frame').forEach(el => el.classList.remove('active'));
-                
-                // Open new
+                // Open
+                if (GameState.activeApp) document.getElementById(`app-${GameState.activeApp}`).classList.remove('active');
                 app.classList.add('active');
-                activeApp = appName;
+                GameState.activeApp = appName;
                 document.body.classList.add('menu-open');
+                frames.world.contentWindow.postMessage({ type: 'PAUSE_GAME' }, '*');
                 
-                // Tell Map to pause (unlock mouse)
-                worldFrame.contentWindow.postMessage({ type: 'PAUSE_GAME' }, '*');
-                
-                // Contextual Dialogue
-                if(appName === 'loot') speak(NPCs.GIB, "I've secured some new assets. Prices are... flexible.", 3000);
-                if(appName === 'tome') speak(NPCs.THORNE, "Threat assessment active. Ready to break some bones, boss.", 3000);
-                if(appName === 'sheet') speak(NPCs.TUCK, "Running diagnostics on your avatar. Don't die on me.", 3000);
-                if(appName === 'campaign') speak(NPCs.TUCK, "Accessing historical archives. History is just data, right?", 3000);
+                // Ensure App has latest Key
+                app.contentWindow.postMessage({ type: 'SYNC_STATE', apiKey: GameState.apiKey, zone: GameState.zone }, '*');
             }
         }
 
-        // --- INPUT HANDLER ---
-        // Listen for keys on the MAIN window (this file)
-        document.addEventListener('keydown', (e) => {
-            // Prevent default browser search/find
-            if(e.key === 'Tab') { 
-                e.preventDefault(); 
-                toggleApp('sheet'); 
-            }
-            if(e.key.toLowerCase() === 'i') { toggleApp('loot'); }
-            if(e.key.toLowerCase() === 'c') { toggleApp('tome'); }
-            if(e.key.toLowerCase() === 'l') { toggleApp('campaign'); }
-            if(e.key === 'Escape') { 
-                if(activeApp) toggleApp(activeApp); // Close active
-            }
-        });
-
-        // --- MESSAGE BUS (Communication with Map) ---
-        window.addEventListener('message', (event) => {
-            const data = event.data;
-
-            if (data.type === 'INTERACTION_AVAILABLE') {
-                prompt.style.opacity = data.available ? '1' : '0';
-                promptText.innerText = data.label || 'INTERACT';
-            }
-
-            if (data.type === 'TRIGGER_EVENT') {
-                if (data.kind === 'COMBAT') {
-                    toggleApp('tome');
-                    speak(NPCs.THORNE, "Ambush! Roll initiative!", 4000);
-                }
-                if (data.kind === 'LOOT') {
-                    toggleApp('loot');
-                    speak(NPCs.GIB, "Hidden cache detected. Opening interface.", 3000);
-                }
-                if (data.kind === 'LORE') {
-                    toggleApp('campaign');
-                    speak(NPCs.TUCK, "Decrypting localized data fragment...", 3000);
-                }
-            }
+        // --- AUTOMATION LOGIC ---
+        window.addEventListener('message', (e) => {
+            const data = e.data;
             
-            // Handle requests from inside apps to close themselves
-            if (data.type === 'CLOSE_APP') {
-                if (activeApp) toggleApp(activeApp);
+            // 1. Trigger from Map
+            if (data.type === 'TRIGGER_EVENT') {
+                if (data.kind === 'LOOT') {
+                    // AUTOMATION: Open Loot App AND Tell it to Generate
+                    toggleApp('loot');
+                    setTimeout(() => {
+                        frames.loot.contentWindow.postMessage({ 
+                            type: 'CMD_AUTO_GENERATE', 
+                            apiKey: GameState.apiKey,
+                            prompt: `Generate a mysterious item found in ${GameState.zone}.`
+                        }, '*');
+                    }, 500); // Slight delay to allow app to wake
+                    speak('GIB', "Scanning container... Decrypting contents.");
+                }
+                else if (data.kind === 'COMBAT') {
+                    toggleApp('tome');
+                    speak('THORNE', "Hostiles detected! I'll take point.");
+                }
+                else if (data.kind === 'LORE') {
+                    toggleApp('campaign');
+                    speak('TUCK', "This data looks corrupted... let me parse it.");
+                }
+            }
+
+            // 2. Item Generated by AI
+            if (data.type === 'ITEM_ACQUIRED') {
+                GameState.inventory.push(data.item);
+                notify(`ACQUIRED: ${data.item.name}`);
+                
+                // Auto-forward to Sheet
+                frames.sheet.contentWindow.postMessage({ type: 'ADD_TO_INVENTORY', item: data.item }, '*');
+            }
+
+            // 3. App Loaded
+            if (data.type === 'APP_READY') {
+                // Sync settings when an app finishes loading
+                syncApps();
             }
         });
 
-        // --- INTRO SEQUENCE ---
-        window.onload = () => {
-            setTimeout(() => {
-                speak(NPCs.GIB, "Connection established. Subject 44, the simulation is unstable. Find the Exit.", 6000);
-            }, 1000);
-        };
+        // --- CONTROLS ---
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') { e.preventDefault(); toggleApp('sheet'); }
+            if (e.key === 'i') toggleApp('loot');
+            if (e.key === 'c') toggleApp('tome');
+            if (e.key === 'Escape') {
+                if (GameState.activeApp) toggleApp(GameState.activeApp);
+                else openSettings();
+            }
+        });
 
+        window.onload = () => {
+            speak('GIB', "System Online. Press ESC to configure Neural Link (API Key).");
+            // Wait for iframes to load then sync
+            setTimeout(syncApps, 2000);
+        };
     </script>
 </body>
 </html>
