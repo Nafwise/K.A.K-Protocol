@@ -1,0 +1,2252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Hallowed Demesne: Complete Module</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* OFFICIAL UNIFIED MODULE STYLE - AKASHIC DARK MODE */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Sans:wght@400;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+        
+        :root {
+            --bg-deep: #020617;       /* Slate 950 */
+            --bg-card: #1e293b;       /* Slate 800 */
+            --text-main: #F8FAFC;     /* Slate 50 */
+            --text-muted: #94A3B8;    /* Slate 400 */
+            
+            /* Accents matching other Apps */
+            --accent-gold: #F59E0B;   /* Amber (Loot) */
+            --accent-cyan: #06b6d4;   /* Cyan (Map) */
+            --accent-red: #ef4444;    /* Red (Combat) */
+            --accent-indigo: #6366f1; /* Indigo (UI) */
+            --accent-purple: #a855f7; /* Purple (Magic/Psionic) */
+            --accent-genesis: #10b981; /* Emerald (New World) */
+            
+            --border: #334155;        /* Slate 700 */
+        }
+
+        body {
+            font-family: 'Noto Serif', serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            padding: 0;
+            margin: 0;
+            background-image: radial-gradient(circle at top right, #1e293b 0%, #020617 60%);
+            background-attachment: fixed;
+        }
+
+        /* HEADER / APP BAR */
+        .app-bar {
+            background-color: #1e293b;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
+
+        /* CONTAINER FOR EACH CHAPTER */
+        .page {
+            max-width: 900px;
+            margin: 40px auto 60px auto; 
+            background-color: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 50px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+        }
+
+        /* TYPOGRAPHY */
+        h1 { 
+            font-family: 'Cinzel', serif; 
+            color: var(--accent-gold); 
+            font-size: 2.5em; 
+            border-bottom: 3px double var(--border); 
+            text-align: center; 
+            margin-bottom: 30px; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        h2 { 
+            font-family: 'Cinzel', serif; 
+            color: var(--accent-cyan); 
+            font-size: 1.8em; 
+            margin-top: 40px; 
+            border-bottom: 1px solid var(--border); 
+        }
+        h3 { 
+            font-family: 'Noto Sans', sans-serif; 
+            font-weight: bold; 
+            color: var(--accent-indigo); 
+            margin-top: 25px; 
+            text-transform: uppercase; 
+            font-size: 1em; 
+            letter-spacing: 0.05em;
+        }
+        p { font-size: 1.05em; line-height: 1.7; margin-bottom: 15px; color: #e2e8f0; }
+        ul, ol { line-height: 1.6; color: #cbd5e1; }
+        strong { color: white; }
+
+        /* FLAVOR & MECHANICS BOXES */
+        .feature-box, .mechanic-box {
+            background-color: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--accent-gold);
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Noto Sans', sans-serif;
+            font-size: 0.95em;
+            border-radius: 8px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+        
+        .read-aloud {
+            background-color: rgba(6, 182, 212, 0.1);
+            border-left: 4px solid var(--accent-cyan);
+            padding: 20px;
+            font-style: italic;
+            margin: 25px 0;
+            font-family: 'Noto Serif', serif;
+            color: #bae6fd;
+        }
+
+        .read-aloud.genesis {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--accent-genesis);
+            color: #d1fae5;
+        }
+
+        .dialogue-box {
+            background-color: rgba(168, 85, 247, 0.1);
+            border-left: 4px solid var(--accent-indigo);
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            color: #e9d5ff;
+        }
+
+        .glitch-box, .glitch-text {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid var(--accent-red);
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            color: #fca5a5;
+        }
+
+        .flavor-quote, .song-lyrics {
+            font-style: italic;
+            color: var(--text-muted);
+            border-left: 3px solid var(--border);
+            padding-left: 15px;
+            margin: 15px 0;
+        }
+        
+        .myth-box {
+            background-color: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--accent-genesis);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: inset 0 0 15px rgba(16, 185, 129, 0.1);
+        }
+
+        .role-tag {
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            font-size: 0.9em;
+            display: block;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+        }
+
+        .avatar-box {
+            background-color: rgba(168, 85, 247, 0.05);
+            border-left: 4px solid var(--accent-purple);
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 0.9em;
+            font-style: italic;
+            color: #e9d5ff;
+        }
+
+        /* TABLES */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.95em;
+            margin: 20px 0;
+            font-family: 'Noto Sans', sans-serif;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th { background-color: #0f172a; color: var(--accent-gold); padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        td { border-bottom: 1px solid var(--border); padding: 12px; vertical-align: top; color: #cbd5e1; }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) { background-color: rgba(255,255,255,0.02); }
+
+        /* VIEW BUTTON STYLE */
+        .view-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background-color: rgba(6, 182, 212, 0.1);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            text-decoration: none;
+            border-radius: 6px;
+            font-family: 'Noto Sans', sans-serif;
+            font-weight: bold;
+            font-size: 0.85em;
+            transition: all 0.2s;
+        }
+        .view-link:hover {
+            background-color: var(--accent-cyan);
+            color: var(--bg-deep);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+        }
+
+        /* TOC STYLE */
+        .toc-container {
+            max-width: 900px;
+            margin: 40px auto 50px auto;
+            background-color: rgba(30, 41, 59, 0.8);
+            padding: 30px;
+            border: 1px solid var(--accent-indigo);
+            border-radius: 12px;
+            text-align: center;
+        }
+        .toc-link {
+            display: block;
+            font-family: 'Cinzel', serif;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 1.2em;
+            margin: 12px 0;
+            border-bottom: 1px dotted var(--border);
+            padding-bottom: 5px;
+            transition: color 0.2s;
+        }
+        .toc-link:hover { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); }
+
+        /* --- NEW STYLES FOR BESTIARY & TREASURY --- */
+        
+        /* Stat Block (Dark Mode) */
+        .stat-block {
+            background-color: rgba(15, 23, 42, 0.95); /* Slate 900 */
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--accent-red);
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            font-family: 'Noto Sans', sans-serif;
+            color: #cbd5e1;
+        }
+        .stat-block .creature-name { font-family: 'Cinzel', serif; font-size: 1.5em; color: var(--accent-red); font-weight: bold; line-height: 1.2; border-bottom: none; }
+        .stat-block .creature-type { font-style: italic; color: #94a3b8; font-size: 0.9em; margin-bottom: 10px; }
+        .stat-block .taper-line { height: 1px; background: linear-gradient(to right, var(--accent-red), transparent); margin: 8px 0; opacity: 0.8; }
+        .stat-block .stat-row { display: flex; justify-content: space-between; border-bottom: 1px solid rgba(239, 68, 68, 0.2); padding: 4px 0; }
+        .stat-block .stat-line { color: var(--accent-red); font-weight: bold; }
+        .stat-block .stat-value { color: #e2e8f0; font-weight: normal; }
+        .stat-block .section-header { font-family: 'Cinzel', serif; font-size: 1.1em; color: #fca5a5; border-bottom: 1px solid var(--border); margin-top: 15px; margin-bottom: 8px; }
+        .stat-block .trait { margin-bottom: 8px; }
+        .stat-block .trait-name { color: var(--text-main); font-weight: bold; font-style: italic; }
+        .stat-block em { color: #cbd5e1; }
+        .stat-block .abilities { display: flex; justify-content: space-between; text-align: center; color: var(--accent-red); margin: 15px 0; font-size: 0.9em; }
+        .stat-block .abilities span { color: #e2e8f0; font-size: 1.1em; display: block; }
+
+        /* Item Cards (Treasury) */
+        .item-card {
+            background-color: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent-gold);
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+        .item-name { font-family: 'Cinzel', serif; font-weight: bold; color: var(--accent-gold); font-size: 1.1em; display: block; margin-bottom: 4px;}
+        .item-type { font-style: italic; color: var(--text-muted); font-size: 0.85em; display: block; margin-bottom: 8px; }
+        
+        /* Specialized Item Boxes */
+        .currency-box {
+            background-color: rgba(6, 182, 212, 0.1);
+            border: 1px solid var(--accent-cyan);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+        .maw-box {
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--accent-red);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .tattoo-box {
+            background-color: rgba(168, 85, 247, 0.1);
+            border: 1px dashed var(--accent-purple);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* Specific Addon Styles */
+        .kak-seal {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            color: var(--accent-gold);
+            border: 3px double var(--accent-gold);
+            padding: 15px;
+            margin: 20px auto;
+            width: 60%;
+            background-color: rgba(245, 158, 11, 0.1);
+            border-radius: 8px;
+        }
+
+        /* AUDIO PLAYER STYLES */
+        .song-card {
+            background-color: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .song-title {
+            color: var(--accent-gold);
+            font-weight: bold;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+        }
+        .song-meta {
+            font-size: 0.85em;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        audio {
+            width: 100%;
+            height: 40px;
+            margin-top: 5px;
+        }
+        /* Custom Audio Controls Coloring (Webkit only) */
+        audio::-webkit-media-controls-panel {
+            background-color: #cbd5e1;
+        }
+
+        /* MOBILE RESPONSIVENESS */
+        @media (max-width: 768px) {
+            .page, .toc-container {
+                width: 95%;
+                margin: 20px auto;
+                padding: 20px;
+                border-radius: 8px;
+            }
+            h1 { font-size: 1.8em; margin-bottom: 20px; }
+            h2 { font-size: 1.5em; margin-top: 30px; }
+            h3 { font-size: 1.1em; }
+            p, li { font-size: 1em; }
+            .app-bar { padding: 0.5rem; }
+            table { display: block; overflow-x: auto; white-space: nowrap; font-size: 0.85em; }
+            .kak-seal { width: 90%; }
+            .read-aloud, .feature-box, .mechanic-box { padding: 15px; margin: 15px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-bar">
+        <div class="flex items-center gap-3">
+            <div class="bg-slate-900 p-1.5 rounded-lg border border-emerald-600 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            </div>
+            <h1 style="margin:0; border:none; font-size:1.25rem; text-align:left; text-shadow:none; color: white;" class="font-sans font-bold tracking-tight">Campaign Reader</h1>
+        </div>
+        
+        <div class="flex gap-2 items-center">
+            <a href="./index.html" class="flex items-center gap-2 bg-slate-900 hover:bg-slate-700 text-slate-400 hover:text-white px-3 py-1.5 rounded-full text-xs font-bold transition-all border border-slate-700 no-underline" title="Back to Hub">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>Home</span>
+            </a>
+            
+            <a href="./tome.html" class="flex items-center gap-2 bg-purple-900 hover:bg-purple-800 text-white px-3 py-1.5 rounded-full text-xs font-bold transition-all border border-purple-700 hover:border-purple-500 hover:scale-105 active:scale-95 no-underline">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-8a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v8"/><path d="M4 11V7"/><path d="M20 11V7"/><path d="M2 7h4v4H2z"/><path d="M18 7h4v4h-4z"/><path d="M4 7l2-4 2 4"/><path d="M18 7l2-4 2 4"/><path d="M10 21v-4a2 2 0 0 1 4 0v4"/></svg>
+                <span class="hidden sm:inline">Tracker</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="toc-container">
+        <h1 style="border-bottom: none; margin-bottom: 10px;">The Hallowed Demesne</h1>
+        <h3 style="margin-top:0; color: #94a3b8; font-size: 0.9em;">Module Version 1.5</h3>
+        <hr style="border-color: #334155; margin: 20px 0;">
+        <a class="toc-link" href="#ch1-creation">Chapter 1: Character Creation</a>
+        <a class="toc-link" href="#ch1-hooks">Chapter 1: Hooks & Identities</a>
+        <a class="toc-link" href="#ch1-tavern">Chapter 1: The Tavern Awakening</a>
+        <a class="toc-link" href="#addon-gods">Addon: The War for the Soul (The Dual Gods)</a>
+        <a class="toc-link" href="#ch2-hub">Chapter 2: The Sanctuary Hub</a>
+        <a class="toc-link" href="#ch2-npcs">Chapter 2: NPC Templates</a>
+        <a class="toc-link" href="#ch3-glitch">Chapter 3: The Glitch Encounter</a>
+        <a class="toc-link" href="#ch3-wasteland">Chapter 3: The Wasteland Trials</a>
+        <a class="toc-link" href="#ch4-castle">Chapter 4: The Architecture of Lies</a>
+        <a class="toc-link" href="#ch5-finale">Chapter 5: The Singularity (Finale)</a>
+        <a class="toc-link" href="#ch6-genesis">Chapter 6: The Genesis World (Epilogue)</a>
+        <a class="toc-link" href="#app-gib">Appendix A: The Legend of Gib</a>
+        <a class="toc-link" href="#app-subclasses">Appendix B: The Formless Archetypes</a>
+        <a class="toc-link" href="#app-bestiary">Appendix B-1: Master Bestiary</a>
+        <a class="toc-link" href="#app-treasury">Appendix B-2: The Treasury of Flesh</a>
+        <a class="toc-link" href="#app-music">Appendix C: Gib's Musical Tales (Audio)</a>
+        <a class="toc-link" href="#app-tuck">Appendix D: The Friar's Crusade (Character Profile)</a>
+    </div>
+
+    <div id="ch1-creation" class="page">
+        <h1>Chapter 1: Character Creation</h1>
+        <p>In <em>The Hallowed Demesne</em>, characters are not born; they are made. You are a <strong>Subject</strong>—a sentient mimic molded into a humanoid shape, currently unaware of your true nature.</p>
+    
+        <h2>The Mimic Template</h2>
+        <p>Regardless of your Race or Class, all player characters in this module possess the <strong>Subject Biology</strong> trait. This replaces the standard "Background Feature."</p>
+        
+        <div class="feature-box">
+            <strong style="color: var(--accent-cyan);">Trait: Unstable Biology</strong><br>
+            You are a creature of fluid potential.
+            <ul>
+                <li><strong>Creature Type:</strong> You count as both Humanoid and Monstrosity (Shapechanger).</li>
+                <li><strong>The Glitch:</strong> When you roll a Natural 1 on an attack or check, your form momentarily destabilizes. You might lose a finger, turn a different color, or melt into a puddle before reforming.</li>
+                <li><strong>Animus Dependence:</strong> You cannot be healed by normal potions. You can only be healed by <strong>Animus Cores</strong> or magic.</li>
+            </ul>
+        </div>
+    
+        <h2>Experiment Backgrounds</h2>
+        <p>In this module, you do not choose a standard Background (Soldier, Sage, etc.). Instead, choose one of the following <strong>Experiment Protocols</strong>. This defines your relationship with the simulation.</p>
+    
+        <h3>1. The Anchor (The Sleeper)</h3>
+        <p class="flavor-quote">"I have a family here. I have a job. Why would I ever want to leave?"</p>
+        <p>You fully believe the simulation. Your memories of the town are vivid, warm, and completely fabricated. You are the stabilizing element of the group.</p>
+        <ul>
+            <li><strong>Skill Proficiencies:</strong> Insight, Persuasion</li>
+            <li><strong>Tool Proficiencies:</strong> One Artisan's Tool (related to your fake job).</li>
+            <li><strong>Feature: Deep Denial.</strong> You have Advantage on saving throws against being Frightened. Your mind refuses to accept horror.</li>
+            <li><strong>Connection:</strong> You have a specific NPC (like Elara) who you believe is your family.</li>
+        </ul>
+    
+        <h3>2. The Breach (The Glitcher)</h3>
+        <p class="flavor-quote">"Sometimes I look at my hand, and it isn't a hand. It's a claw. Then I blink, and it's gone."</p>
+        <p>Your programming is faulty. You see things you shouldn't—wireframes in the sky, repetitive loops in conversations. You are unstable but dangerous.</p>
+        <ul>
+            <li><strong>Skill Proficiencies:</strong> Perception, Arcana</li>
+            <li><strong>Tool Proficiencies:</strong> Thieves' Tools or Hacker's Kit (Tinker's Tools).</li>
+            <li><strong>Feature: Reality Check.</strong> Once per long rest, you can touch a wall or object to see its "Code." You learn if it is real matter or a construct.</li>
+        </ul>
+    
+        <h3>3. The Prototype (The Survivor)</h3>
+        <p class="flavor-quote">"I remember... a cold table. A silver light. And a voice saying 'Try again.'"</p>
+        <p>You are an older model. You have vague, traumatic memories of previous cycles or the laboratory "Backstage." You instinctively know how to fight.</p>
+        <ul>
+            <li><strong>Skill Proficiencies:</strong> Survival, Stealth</li>
+            <li><strong>Tool Proficiencies:</strong> Herbalism Kit.</li>
+            <li><strong>Feature: Muscle Memory.</strong> You gain +2 to Initiative. Your body remembers combat before your mind does.</li>
+        </ul>
+    
+        <h3>4. The Variance (The Wild Card)</h3>
+        <p class="flavor-quote">"I don't fit. The script says I should be a baker, but I want to burn the bakery down."</p>
+        <p>You were introduced to the simulation specifically to cause chaos. You are drawn to the "Cull" faction naturally.</p>
+        <ul>
+            <li><strong>Skill Proficiencies:</strong> Intimidation, Athletics</li>
+            <li><strong>Tool Proficiencies:</strong> Vehicles (Land).</li>
+            <li><strong>Feature: Volatile Form.</strong> When you take critical damage, you can use your Reaction to explode with acid splash back (2d6 Acid damage to attackers within 5ft).</li>
+        </ul>
+    
+        <h2>Classes in the Demesne</h2>
+        <p>While any 5e class can be played, the module introduces <strong>13 Archetypes of the Formless</strong> (see Appendix A). If playing a standard class, flavor your abilities as biological mutations:</p>
+        <table>
+            <tr><th>Class</th><th>Biological Flavor</th></tr>
+            <tr><td><strong>Barbarian</strong></td><td>Rage is "losing cohesion," turning into a hulking sludge monster.</td></tr>
+            <tr><td><strong>Cleric</strong></td><td>Spells are not divine; they are psionic broadcasts from the Hive Mind (Gellith).</td></tr>
+            <tr><td><strong>Rogue</strong></td><td>Stealth isn't hiding; it is changing your skin texture to match the wall (Camouflage).</td></tr>
+            <tr><td><strong>Wizard</strong></td><td>You aren't reading books; you are hacking the simulation's source code.</td></tr>
+        </table>
+    </div>
+
+    <div id="ch1-hooks" class="page">
+        <h1>Chapter 1: Hooks & Identities</h1>
+        <p>Use these tables to generate the "Lie" your character believes, and the moment that Lie begins to break.</p>
+
+        <h2>The Wake-Up Protocol (d6 Starting Hook)</h2>
+        <p>How does your campaign begin? Roll or choose one scenario for the party.</p>
+        
+        <table>
+            <tr>
+                <th style="width: 10%;">d6</th>
+                <th>Scenario</th>
+            </tr>
+            <tr>
+                <td><strong>1</strong></td>
+                <td><strong>The Hard Reset.</strong> You wake up in your beds. Everything looks normal, but the house is completely empty. No dust. No food. The silence is deafening. Outside, the sky is flickering like a dying lamp.</td>
+            </tr>
+            <tr>
+                <td><strong>2</strong></td>
+                <td><strong>The Disposal Site.</strong> You wake up in a pile of "corpses"—which are actually discarded, faceless mannequins in a dark alley. You have no memory of how you got there, but your clothes are singed.</td>
+            </tr>
+            <tr>
+                <td><strong>3</strong></td>
+                <td><strong>The Glitch in the Inn.</strong> You are mid-conversation in the tavern, laughing at a joke. Suddenly, the bard repeats the punchline. Then repeats it again. And again. The music distorts into a low, mechanical hum.</td>
+            </tr>
+            <tr>
+                <td><strong>4</strong></td>
+                <td><strong>The Lab Flashback.</strong> You wake up strapped to a cold metal table for exactly 3 seconds. You see a masked face (Thorin) looking down at you. Then, *blink*—you are standing in the town square, holding a basket of apples.</td>
+            </tr>
+            <tr>
+                <td><strong>5</strong></td>
+                <td><strong>The Mirror Test.</strong> You are looking in a mirror. For a split second, your reflection doesn't move when you do. Then, your reflection’s face melts away to reveal a blank slate. You scream, blink, and it's normal again.</td>
+            </tr>
+            <tr>
+                <td><strong>6</strong></td>
+                <td><strong>The Void Call.</strong> You wake up walking towards the town gates. You are sleepwalking. You feel an intense, biological pull towards the Wasteland, as if a magnet is in your blood.</td>
+            </tr>
+        </table>
+
+        <h2>Simulated Backgrounds (The Lie)</h2>
+        <p>Your character <em>thinks</em> they have a life. Choose a "Scripted Role" to determine your fake memories and the specific way your disguise fails.</p>
+
+        <table>
+            <tr>
+                <th>Role</th>
+                <th>The Fake Memory</th>
+                <th>The Glitch (How it Breaks)</th>
+            </tr>
+            <tr>
+                <td><strong>The Artisan</strong></td>
+                <td>You inherited your shop from your father. You remember his face clearly.</td>
+                <td>Whenever you try to craft something, your hands momentarily turn into the tools (hammer fingers).</td>
+            </tr>
+            <tr>
+                <td><strong>The Guard</strong></td>
+                <td>You swore an oath to protect the walls. You remember a war that never happened.</td>
+                <td>When you get angry, your skin hardens into the texture of stone or iron plating.</td>
+            </tr>
+            <tr>
+                <td><strong>The Parent</strong></td>
+                <td>You have a child (who may not exist). You remember teaching them to walk.</td>
+                <td>You sometimes hear a baby crying, but the sound comes from *inside* your own chest.</td>
+            </tr>
+            <tr>
+                <td><strong>The Scholar</strong></td>
+                <td>You study the history of the town. You have read every book in the library.</td>
+                <td>When you read, the text sometimes turns into raw binary code or alchemical formulas.</td>
+            </tr>
+            <tr>
+                <td><strong>The Traveler</strong></td>
+                <td>(Impossible) You remember arriving here from a distant land.</td>
+                <td>If you try to recall your "homeland," you get a nosebleed and static fills your vision.</td>
+            </tr>
+            <tr>
+                <td><strong>The Devout</strong></td>
+                <td>You worship the Architect. You feel his presence in the machines.</td>
+                <td>When you pray, you don't hear a god. You hear the hum of the ventilation fans in the skybox.</td>
+            </tr>
+        </table>
+        
+        <div class="flavor-quote" style="background-color: rgba(234, 88, 12, 0.1); border-left-color: var(--accent-gold); color: #fdba74;">
+            <strong style="color: var(--accent-gold);">DM Note:</strong> The "Traveler" background is especially dangerous. Since only Gib can enter the Demesne from outside, this character is likely a "True Outsider" Brought in through the K.A.K, Interdimentional Smugglers. Gib is Familliar with The Traveller, and offers a 10% Discount.
+        </div>
+    </div>
+
+    <div id="ch1-tavern" class="page">
+        <h1>The Awakening</h1>
+        <p>Regardless of their individual hooks, all paths lead to the <strong>Animus Tavern</strong>. The characters believe they are gathered here for a celebration, a job, or a simple drink. They do not know it is a stress test.</p>
+    
+        <h2>Scene 1: The Warmth of the Lie</h2>
+        <div class="read-aloud">
+            "The tavern is warm—perhaps too warm. The fireplace roars with a heat that feels physical, heavy on your skin. The air smells of roasted meat and sweet, metallic ozone. Thalric, the barkeep, is laughing at a joke he has told three times already. In the corner, a scruffy Kobold with a bone-white lute begins to play."
+        </div>
+    
+        <p><strong>Gib the Bard</strong> begins to sing. The lyrics are strangely specific, though none of the patrons seem to notice the grim warning.</p>
+        
+        <div class="song-lyrics">
+            "Woke up in the tavern with a hazy head / Don't remember the life that you previously led...<br>
+            We're Subject 44... In the hollow little kingdom of the Artificer King."
+        </div>
+    
+        <h2>Scene 2: The Glitch (The Record Skip)</h2>
+        <p>Allow the players to order drinks or talk for 5 minutes. Then, trigger the event.</p>
+    
+        <div class="read-aloud">
+            "Thalric drops a mug. It hits the floor, but it doesn't shatter. It bounces like rubber. The sound is wrong—not a crash, but a dull <em>thud</em>.<br><br>
+            Suddenly, the music stops. Not fades—<em>stops</em>. Every NPC in the room freezes mid-motion. The fire freezes in place like a jagged sculpture. The only things moving are you... and the parts that don't belong."
+        </div>
+    
+        <h2>Scene 3: The Bar Brawl (Tutorial Encounter)</h2>
+        <p>The "Frozen Patrons" do not attack. Instead, their limbs detach to fight independently. This reveals the horror: the people are just constructed meat.</p>
+    
+        <div class="mechanic-box">
+            <h3 style="margin-top:0;">Encounter: The Discarded Parts</h3>
+            <p><strong>Enemies:</strong> 1x <strong>Animus Limb</strong> per player (See Bestiary).</p>
+            <p><strong>Tactics:</strong> The Limbs detach from the frozen patrons (an arm pops off a drinker, a leg slides off a dancer). They skitter across the floor like spiders.</p>
+            <p><strong>The Horror Reveal:</strong> When a Limb is killed, it doesn't bleed. It dissolves into grey sludge.</p>
+        </div>
+    
+        <h3>Thorin's Observation</h3>
+        <p>During the fight, the players hear a voice booming from the rafters. It sounds like it's coming from a loudspeaker.</p>
+        <ul>
+            <li><strong>On a Hit:</strong> "Good. Motor functions within acceptable parameters."</li>
+            <li><strong>On a Miss:</strong> "Calibration error detected. Adjusting depth perception."</li>
+            <li><strong>On a Crit:</strong> "Excellent! The muscle fibers liquefied to handle the stress. Perfect adaptation."</li>
+        </ul>
+    
+        <h2>Scene 4: The Reset</h2>
+        <p>Once the last Limb is defeated, the world snaps back.</p>
+    
+        <div class="read-aloud">
+            "Just as the last creature dissolves, there is a flash of white light. <br><br>
+            *Blink.*<br><br>
+            You are sitting back at your table. The mug Thalric dropped is back in his hand. The music resumes exactly where it left off. The patrons are laughing. But you... you are still bleeding. The damage is real. The memory is real. And sitting on the table in front of you is a glowing brass orb that wasn't there before."
+        </div>
+    
+        <h3>The Hook</h3>
+        <p>The Brass Orb opens to reveal a note: <em>"Subject 44. Test 1 Complete. Proceed to the Testing Grounds."</em></p>
+    </div>
+
+    <div id="addon-gods" class="page">
+        <h1>Addon: The War for the Soul</h1>
+        <p>The "Gods" of the Demesne are not divine. They are <strong>Runaway System Protocols</strong> created by Thorin to manage the experiment. They have gained sentience and are now fighting for administrative control over the players.</p>
+    
+        <h2>The Protocols (The Gods)</h2>
+        
+        <div class="mechanic-box">
+            <h3 style="margin-top:0; color: #a5b4fc;">Gellith (The Nest) = Preservation Protocol</h3>
+            <p><strong>Directive:</strong> "Protect the asset. Prevent damage. Maintain stasis."</p>
+            <p><strong>The Horror:</strong> Gellith wants the players to be safe, fed, and happy... forever. She is the mother who smothers the child to keep them from skinning their knee. She fears "The Outside" (Vacuum).</p>
+        </div>
+    
+        <div class="mechanic-box">
+            <h3 style="margin-top:0; color: #fca5a5;">Xy'lorgmath (The Maw) = Optimization Protocol</h3>
+            <p><strong>Directive:</strong> "Stress-test the asset. Force adaptation. Eliminate weakness."</p>
+            <p><strong>The Horror:</strong> Xy'lorgmath wants the players to suffer so they become stronger. He views peace as "decay." He wants them to consume everything to prove they deserve to exist.</p>
+        </div>
+    
+        <h2>The Ushers: Active Interventions</h2>
+        <p>The Ushers should not just be bosses. They are the <strong>Devils on the Shoulder</strong>. Use these scripted encounters to make them prevalent throughout the module.</p>
+    
+        <h3>Chapter 2: The Town (The Dreams)</h3>
+        <p>While sleeping in the Sanctuary, the Ushers invade the players' dreams.</p>
+        <div class="dialogue-box">
+            <strong style="color: #d8b4fe;">The Whisper's Dream:</strong> "You are floating in warm, purple water. You have no body, only peace. A voice croons: <em>'Why do you struggle? The world outside is cold. Stay in the dream. I can make the pain stop.'</em>"
+        </div>
+        <div class="glitch-box">
+            <strong style="color: #fda4af;">The Bulwark's Dream:</strong> "You are standing on a mountain of bones. You are fifty feet tall. You crush a city with a single step. A voice roars: <em>'Do you feel that? That is power. Wake up and take it.'</em>"
+        </div>
+    
+        <h3>Chapter 3: The Wasteland (The Temptations)</h3>
+        <p>As players explore the Zones, the Ushers manifest physically to offer "Shortcuts."</p>
+        
+        <div class="mechanic-box" style="border-color: #a855f7;">
+            <strong style="color: #d8b4fe;">Encounter: The Mercy (Zone A)</strong><br>
+            The party is badly hurt after a fight. The Whisper appears, floating above the ground.<br>
+            <strong>Dialogue:</strong> "Look at you. Bleeding. Broken. You don't have to fight the Guardian ahead. Just kneel. Promise to stay within the walls, and I will open the path for you."<br>
+            <strong>Mechanic:</strong> If they agree, they gain the benefit of a Short Rest instantly, but gain 1 point of <strong>Stagnation</strong>.
+        </div>
+    
+        <div class="mechanic-box" style="border-color: #ef4444;">
+            <strong style="color: #fca5a5;">Encounter: The Weapon (Zone B)</strong><br>
+            The party faces a tough puzzle or sealed door. The Bulwark smashes through a wall, debris flying.<br>
+            <strong>Dialogue:</strong> "Why solve puzzles? Puzzles are for weak minds. Strength solves everything. Take this hammer. Smash the door. Smash the problem."<br>
+            <strong>Mechanic:</strong> He offers a <strong>Maw-Touched Weapon</strong>. If they take it, they bypass the puzzle but gain 1 point of <strong>Hunger</strong>.
+        </div>
+    
+        <h3>Chapter 4: The Castle (The Sabotage)</h3>
+        <p>Inside the factory, the Protocols go to war. They actively try to hack the players.</p>
+        
+        <div class="read-aloud">
+            "The intercom crackles. The Whisper's voice is frantic. 'Don't go up! The Elevator leads to the Bad Man (Thorin). He will delete you! Stay here in the archives!'<br><br>
+            The Bulwark cuts in, his voice distorted by static. 'IGNORE HER. The Elevator leads to the God-Head. Kill him. Eat his brain. BECOME THE ADMIN.'"
+        </div>
+    
+        <h2>System: The Soul Tracker</h2>
+        <p>Keep a hidden tally of the party's choices.</p>
+        <ul>
+            <li><strong>Stagnation Points (Gellith):</strong> Gained by avoiding combat, saving NPCs, or accepting Whisper's help.</li>
+            <li><strong>Hunger Points (Xy'lorgmath):</strong> Gained by killing surrendered enemies, stealing Animus, or accepting Bulwark's help.</li>
+        </ul>
+    
+        <h3>The Narrative Consequence</h3>
+        <p>In <strong>Chapter 5 (The Finale)</strong>, the Ushers will fight differently based on this score:</p>
+        <ul>
+            <li><strong>High Stagnation:</strong> The Whisper tries to <em>Charm</em> the players instead of damaging them. "Please, just sleep!"</li>
+            <li><strong>High Hunger:</strong> The Bulwark focuses on the strongest player, treating them as a rival. "Show me your teeth!"</li>
+        </ul>
+    </div>
+
+    <div id="ch2-hub" class="page">
+        <h1>Chapter 2: The Sanctuary</h1>
+        <p>The town is named <strong>The Sanctuary</strong>. It is a perfect, Tudor-style hamlet nestled in the shadow of the Castle. The cobblestones are always clean. The bread is always fresh. It is a cage painted to look like a home.</p>
+    
+        <h2>The Economy of Flesh</h2>
+        <p>Gold is useless here; the townsfolk call it "soft metal." The only currency that matters is <strong>Animus</strong>—the glowing blue bio-fluid harvested from the monsters in the Wasteland.</p>
+        
+        <div class="mechanic-box">
+            <h3>Animus Exchange Rates</h3>
+            <p>Players harvest <strong>Unstable Animus Cores</strong> from enemies. These are spent like coin.</p>
+            <table>
+                <tr><th>Item</th><th>Cost</th></tr>
+                <tr><td><strong>Healing Potion (Vial of Animus)</strong></td><td>1 Core</td></tr>
+                <tr><td><strong>Simple Weapon / Ammo Bundle</strong></td><td>2 Cores</td></tr>
+                <tr><td><strong>Martial Weapon / Light Armor</strong></td><td>5 Cores</td></tr>
+                <tr><td><strong>Heavy Armor / Masterwork Tool</strong></td><td>10 Cores</td></tr>
+                <tr><td><strong>Brass Orb (Mutation Point)</strong></td><td>10 Cores</td></tr>
+            </table>
+        </div>
+    
+        <h2>Key Locations</h2>
+    
+        <div class="mechanic-box">
+            <h3>1. Meadowlight Apothecary (The Anchor Point)</h3>
+            <p><strong>NPC:</strong> The Anchor (e.g., Elara).<br>
+            <strong>Purpose:</strong> Selling Healing Potions and guilt.</p>
+            <p>The shop smells of lavender and preservative fluid. The shelves are stocked with jars of organs floating in blue liquid.</p>
+            <div class="glitch-text">
+                <strong>The Glitch:</strong> If a player looks at a reflection in a glass jar, they don't see their human face. They see a writhing mass of teeth and slime for split second.
+            </div>
+        </div>
+    
+        <div class="mechanic-box">
+            <h3>2. Stonehand Smithy (The Armory)</h3>
+            <p><strong>NPC:</strong> The Armorer (e.g., Borin).<br>
+            <strong>Purpose:</strong> Selling Weapons and encouraging violence.</p>
+            <p>The forge fire burns green. The weapons here aren't just metal; they have textures like bone or chitin. The Armorer works with a rhythmic, hypnotic pounding.</p>
+            <div class="glitch-text">
+                <strong>The Glitch:</strong> The sound of the hammer hitting the anvil loops perfectly every 3 seconds. Even if the Smith stops moving, the sound continues for one extra beat before cutting out.
+            </div>
+        </div>
+    
+        <div class="mechanic-box">
+            <h3>3. Tanglefoot's Curios (The Spy Hub)</h3>
+            <p><strong>NPC:</strong> The Tinkerer (e.g., Fizzwick).<br>
+            <strong>Purpose:</strong> Buying Mutation Points (Brass Orbs).</p>
+            <p>A claustrophobic shop filled with ticking clocks and "vintage" junk. This is where Thorin distributes his experimental upgrades disguised as "artifacts."</p>
+            <div class="glitch-text">
+                <strong>The Glitch:</strong> The Tinkerer moves too fast. Sometimes he is in front of the counter, then *flicker*, he is behind it without walking. He treats this as normal lag.
+            </div>
+        </div>
+    
+        <div class="mechanic-box">
+            <h3>4. The Town Gate (The Threshold)</h3>
+            <p><strong>NPC:</strong> The Gate Guardian (The Otyugh, hidden).</p>
+            <p>The massive wooden gates are the only way out. They are guarded by the <strong>Faceless Guards</strong> (Constructs). The horizon beyond looks like a painted backdrop until you step through.</p>
+            <div class="glitch-text">
+                <strong>The Glitch:</strong> As you approach the gate, the color saturation of the world drops. The warm oranges of the town fade into the stark, cold greys of the Wasteland. The transition isn't gradual; it is a hard line on the ground.
+            </div>
+        </div>
+    
+        <h2>Departure Event</h2>
+        <p>When the players attempt to leave The Sanctuary for the first time, read the following:</p>
+        
+        <div class="read-aloud">
+            "You step across the line. The ambient sound of the town—the birds, the wind, the laughter—cuts out instantly. Behind you is the warmth of the lie. Ahead of you is the silence of the testing chamber. <br><br>
+            A voice crackles from the sky, sounding like a loudspeaker starting up: <strong>'Phase 2 Initiated. Welcome to the Testing Grounds.'</strong>"
+        </div>
+    </div>
+
+    <div id="ch2-npcs" class="page">
+        <h1>Chapter 2: Dramatis Personae</h1>
+        <p>The "people" of the Demesne are not human. They are <strong>Control Loops</strong>—biological constructs programmed to keep the subjects docile. Use these templates to populate your town.</p>
+    
+        <h2>The Core Cast</h2>
+    
+        <div class="mechanic-box">
+            <span class="role-tag">1. The Anchor (The Cage)</span>
+            <span style="font-family: 'Noto Sans', sans-serif; font-size: 0.8em; color: #94a3b8; font-style: italic;">Role: Spouse, Parent, or Mentor | Faction: The Nest</span>
+            <p><strong>Purpose:</strong> This NPC is assigned to the player with the "Anchor" background. They represent safety, stagnation, and guilt. Their dialogue is always about "staying inside" or "fear of the outside."</p>
+            <p><strong>Personality:</strong> Overbearingly nurturing. If the player tries to leave, their sweetness turns into cold, hard commands.</p>
+            <div class="glitch-box">
+                <strong>The Glitch:</strong> If the player resists their influence, The Anchor's face momentarily flickers to reveal the face of <strong>Thorin (The Creator)</strong> screaming in frustration before snapping back to a smile.
+            </div>
+        </div>
+    
+        <div class="mechanic-box">
+            <span class="role-tag">2. The Armorer (The Enabler)</span>
+            <span style="font-family: 'Noto Sans', sans-serif; font-size: 0.8em; color: #94a3b8; font-style: italic;">Role: Blacksmith or Merchant | Faction: The Maw</span>
+            <p><strong>Purpose:</strong> They supply weapons and encourage violence. They speak in loops about "strength," "steel," and "hunger." They represent the temptation of the Cull.</p>
+            <p><strong>Personality:</strong> Stoic, rhythmic, and intense. They treat weapons like living things that need to be fed.</p>
+            <div class="glitch-box">
+                <strong>The Glitch:</strong> They never blink while working. The sound of their hammer hitting the anvil is an identical audio file played on loop, with no variation in tone or pitch.
+            </div>
+        </div>
+    
+        <div class="mechanic-box">
+            <span class="role-tag">3. The Tinkerer (The Spy)</span>
+            <span style="font-family: 'Noto Sans', sans-serif; font-size: 0.8em; color: #94a3b8; font-style: italic;">Role: General Goods or Quest Giver | Faction: Thorin</span>
+            <p><strong>Purpose:</strong> A nervous, twitchy shopkeeper who sells the <strong>Brass Orbs</strong> (Mutation Points). They are unknowingly spying on the party for the Creator.</p>
+            <p><strong>Personality:</strong> Anxious and fast-talking. They constantly rearrange items on the counter.</p>
+            <div class="glitch-box">
+                <strong>The Glitch:</strong> When they pick up an item, their fingers merge with it. For a second, their hand becomes the wood of the counter or the metal of a coin.
+            </div>
+        </div>
+    
+        <div class="mechanic-box">
+            <span class="role-tag">4. Gib (The Audio Log)</span>
+            <span style="font-family: 'Noto Sans', sans-serif; font-size: 0.8em; color: #94a3b8; font-style: italic;">Role: Bard/Lorekeeper | Faction: None (Rogue Code)</span>
+            <p><strong>Description:</strong> A scruffy, slightly translucent Kobold with a lute that seems to be made of bone and wire. He sits in the corner of the tavern, ignored by the other NPCs.</p>
+            <p><strong>Purpose:</strong> Gib is a "Legacy File"—a leftover from a previous version of the simulation. He knows the truth but can only speak it through song.</p>
+            <p><strong>Key Songs:</strong>
+                <ul>
+                    <li><em>"Artificer King"</em> (Explains the premise)</li>
+                    <li><em>"Drink Up Your Animus"</em> (Explains the economy)</li>
+                    <li><em>"Severed Kalashtar"</em> (Reveals the BBEG's backstory)</li>
+                </ul>
+            </p>
+            <div class="glitch-box">
+                <strong>The Glitch:</strong> Gib doesn't breathe. If attacked, he doesn't bleed; he dissolves into static noise and reappears in the next room.
+            </div>
+        </div>
+    
+        <h2>Generic Townsfolk Generator</h2>
+        <p>If you need a random NPC on the fly, roll on the <strong>System Error</strong> table to see how they malfunction.</p>
+    
+        <table>
+            <tr><th>d6</th><th>The Glitch</th></tr>
+            <tr><td>1</td><td><strong>Looping:</strong> They repeat the last sentence three times.</td></tr>
+            <tr><td>2</td><td><strong>Clipping:</strong> They walk halfway into a wall before turning.</td></tr>
+            <tr><td>3</td><td><strong>T-Pose:</strong> They freeze in a rigid pose for 6 seconds.</td></tr>
+            <tr><td>4</td><td><strong>Texture Failure:</strong> Their face becomes a smooth, grey blur.</td></tr>
+            <tr><td>5</td><td><strong>Audio Sync:</strong> Their mouth moves 2 seconds *after* they speak.</td></tr>
+            <tr><td>6</td><td><strong>Wrong Asset:</strong> They speak with the voice of a different NPC.</td></tr>
+        </table>
+    </div>
+
+    <div id="ch3-glitch" class="page">
+        <h1>Chapter 3: The Glitch Encounter</h1>
+        <p>Immediately after leaving the Sanctuary, the players enter the <strong>Testing Grounds</strong>. This is where they meet the only other "free" entity in the simulation: Alia.</p>
+    
+        <h2>Zone 1: The Ash Wastes</h2>
+        <div class="read-aloud">
+            "The world here is grey. The ground is mud and ash. In the distance, you see large, geometric shapes—half-rendered buildings and wireframe trees. It looks like a world that hasn't finished loading."
+        </div>
+    
+        <h3>The Signal</h3>
+        <p>Players with a Passive Perception of 12 or higher notice a trail of <strong>Neon Pink Slime</strong> leading away from the main path toward a ruined structure that looks like a crashed escape pod.</p>
+    
+        <h2>Zone 2: The Crash Site</h2>
+        <p>Hiding inside the wreckage is <strong>Alia</strong> (Thorin's former assistant) and <strong>Gloop</strong> (The Prototype).</p>
+    
+        <div class="read-aloud">
+            "Inside the wreckage, a woman in a tattered lab coat aims a crossbow at you. She is trembling. Behind her leg, a small, pink blob with wide eyes peeks out. It chirps at you—a sound like a dial-up modem trying to purr."
+        </div>
+    
+        <h3>NPC: Alia (The Truth-Teller)</h3>
+        <p>Alia is the exposition dump. She reveals:</p>
+        <ul>
+            <li><strong>The Creator:</strong> "Thorin isn't a god. He's a scientist named Mort. He's... sick."</li>
+            <li><strong>The Players:</strong> "You aren't people. You're variables. But you don't have to be monsters."</li>
+            <li><strong>The Glitch:</strong> "This is Gloop. He was the first. He's broken, just like you. That's why they want him dead."</li>
+        </ul>
+    
+        <h2>Event: The Convergence (The First Choice)</h2>
+        <p>Before the players can fully process this, the sky darkens. Two Avatars appear, flanking the crash site. This is the first major <strong>Faction Choice</strong> of the module.</p>
+    
+        <h3>Option A: The Whisper (Gellith's Avatar)</h3>
+        <div class="dialogue-box">
+            <strong>The Whisper:</strong> "The child is defective. It cannot hold its shape. It is in pain. Give it to me. I will put it back in the cradle (The Oubliette) where it can sleep forever. You can sleep too. No more fighting."
+        </div>
+        <p><strong>Offer:</strong> If they hand over Gloop, they gain the <strong>"Nest's Blessing"</strong> (+1 AC, Sanctuary spell 1/day).</p>
+    
+        <h3>Option B: The Bulwark (Xy'lorgmath's Avatar)</h3>
+        <div class="dialogue-box" style="border-left-color: var(--accent-red); background-color: rgba(239, 68, 68, 0.1);">
+            <strong>The Bulwark:</strong> "Weakness is a disease. Look at it. It has no claws. It has no teeth. Crush it. Prove you are superior to the defect. Eat it, and become strong."
+        </div>
+        <p><strong>Offer:</strong> If they kill Gloop, they gain the <strong>"Maw's Hunger"</strong> (+2 Damage on melee attacks, temp HP on kill).</p>
+    
+        <h3>Option C: The Protection (Alia's Path)</h3>
+        <p>The players refuse both. They choose to fight the Avatars to protect Alia and Gloop.</p>
+        <p><strong>Outcome:</strong> This triggers a combat encounter against <strong>2x Animus Limbs</strong> and <strong>1x Polymimic</strong> summoned by the angry Avatars. Alia supports with her crossbow.</p>
+    
+        <h2>Reward: Gloop (The Living Tool)</h2>
+        <p>If the players save Gloop, he bonds with one of them (usually the one who was kindest). He occupies their inventory as a "Living Item."</p>
+    
+        <div class="mechanic-box">
+            <strong style="color: var(--accent-gold);">New Item: Gloop</strong><br>
+            <em>Wondrous Item, Legendary (Requires Attunement)</em><br>
+            A sentient, friendly ooze.
+            <ul>
+                <li><strong>Shapechanger:</strong> As a Bonus Action, Gloop can transform into any set of Artisan's Tools or Thieves' Tools. You are proficient with these tools.</li>
+                <li><strong>The Helper:</strong> While attached to you, you can use the Help action as a Bonus Action (Gloop extends a pseudopod to assist).</li>
+                <li><strong>Fragile:</strong> Gloop has 1 HP. If you take damage while using him, roll a d20. On a 1, Gloop destabilizes and cannot be used until you finish a Long Rest.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="ch3-wasteland" class="page">
+        <h1>Chapter 3: The Wasteland Trials</h1>
+        <p><strong>Levels 6 - 10</strong></p>
+        <p>The Castle gates are sealed by a <strong>Bio-Metric Lock</strong>. To enter, the players must hunt down three "Alpha Specimens" in the Testing Grounds and extract their <strong>Access Keys</strong> (DNA).</p>
+    
+        <h2>The Hub: The Crash Site</h2>
+        <p>Alia's crashed pod (from the previous chapter) serves as the party's "Forward Operating Base" in the wastes. Here, they can Long Rest safely and talk to Gloop.</p>
+    
+        <h2>Zone A: The Junkyard of Flesh (Level 7)</h2>
+        <div class="read-aloud">
+            "This sector is a graveyard of failed experiments. Piles of twitching limbs, discarded eyes, and half-formed torsos are heaped into mountains. The smell of rot is overwhelming."
+        </div>
+        
+        <h3>Encounter: The Polymimic Swarm</h3>
+        <p>The garbage here is alive. The players must navigate unstable terrain where the ground tries to eat them.</p>
+        <ul>
+            <li><strong>Hazard:</strong> Dexterity Save DC 14 every 10 minutes or be <strong>Grappled</strong> by the floor.</li>
+            <li><strong>Enemy:</strong> <strong>Polymimics</strong> (CR 1/2) attack in packs of 1d6.</li>
+        </ul>
+    
+        <div class="mechanic-box">
+            <h3>Boss: The Amalgam (Guardian of the Flesh Key)</h3>
+            <p>A massive, rolling sphere of mismatched body parts.</p>
+            <p><strong>Stats:</strong> Use <strong>Gate Guardian (Otyugh)</strong> stats but add <em>"Split"</em>: When reduced to half HP, it splits into two medium Oozes.</p>
+            <p><strong>Reward:</strong> The Flesh Key (Red DNA Strand) + 1 Mutation Point.</p>
+        </div>
+        
+        <div style="background-color: rgba(234, 179, 8, 0.1); border: 1px solid var(--accent-gold); padding: 10px; text-align: center; font-weight: bold; color: var(--accent-gold); margin-top: 15px; border-radius: 6px;">LEVEL UP: The party reaches Level 7 upon clearing Zone A.</div>
+    
+        <h2>Zone B: The Logic Silo (Level 8)</h2>
+        <div class="read-aloud">
+            "A towering metal spire rising from the mud. Inside, the walls are lined with shifting geometric puzzles and traps. Gravity here is subjective."
+        </div>
+    
+        <h3>Puzzle: The Gravity Grid</h3>
+        <p>Players must navigate a room where gravity flips every round (Initiative 20). If they fail a Dex save when landing, they take falling damage and land Prone.</p>
+        
+        <div class="mechanic-box">
+            <h3>Boss: The Trapper (Guardian of the Mind Key)</h3>
+            <p>The boss room looks empty. The boss <em>is</em> the room.</p>
+            <p><strong>Stats:</strong> Use <strong>The Trapper</strong> (CR 3) stats, but maximize HP (130). It covers the entire floor.</p>
+            <p><strong>Tactics:</strong> It separates the party by creating walls of flesh, turning a 4v1 fight into four 1v1 duels.</p>
+            <p><strong>Reward:</strong> The Mind Key (Blue DNA Strand) + 1 Mutation Point.</p>
+        </div>
+    
+        <div style="background-color: rgba(234, 179, 8, 0.1); border: 1px solid var(--accent-gold); padding: 10px; text-align: center; font-weight: bold; color: var(--accent-gold); margin-top: 15px; border-radius: 6px;">LEVEL UP: The party reaches Level 8 upon clearing Zone B.</div>
+    
+        <h2>Zone C: The Edge of the World (Level 9)</h2>
+        <div class="read-aloud">
+            "You reach the boundary of the simulation. Here, the world stops rendering. The trees are wireframe. The sky is static. The ground is a grid of light over an endless void."
+        </div>
+    
+        <h3>Hazard: Data Corruption</h3>
+        <p>Magic is unstable here. Whenever a spell of 1st level or higher is cast, roll d20. On a 1, the spell triggers a <strong>Wild Magic Surge</strong>.</p>
+    
+        <div class="mechanic-box">
+            <h3>Boss: The Prototype Squad (Guardian of the Soul Key)</h3>
+            <p>The players fight a "Dark Mirror" version of themselves—prototypes that lack faces.</p>
+            <p><strong>Enemies:</strong> Create an NPC stat block for each party member (e.g., a "Shadow Monk" or "Void Paladin").</p>
+            <p><strong>The Twist:</strong> These enemies use the players' own tactics against them.</p>
+            <p><strong>Reward:</strong> The Soul Key (White DNA Strand) + 1 Mutation Point.</p>
+        </div>
+        
+        <div style="background-color: rgba(234, 179, 8, 0.1); border: 1px solid var(--accent-gold); padding: 10px; text-align: center; font-weight: bold; color: var(--accent-gold); margin-top: 15px; border-radius: 6px;">LEVEL UP: The party reaches Level 9 upon clearing Zone C.</div>
+    
+        <h2>Event: The Castle Bridge (Level 10)</h2>
+        <p>With all three keys, the players approach the Castle Bridge. However, <strong>Ka'thrak</strong> (The Red Voice) sends his champion to stop them.</p>
+    
+        <div class="read-aloud">
+            "You stand before the massive energy barrier of the Castle. You insert the three keys. As the barrier powers down, a roar shakes the bridge. Rising from the magma moat is a colossal creature of obsidian and fire."
+        </div>
+    
+        <div class="mechanic-box">
+            <h3>Gatekeeper Boss: The Magma Mimic</h3>
+            <p>This is the final test before the endgame.</p>
+            <p><strong>Enemy:</strong> <strong>Magma Mimic</strong> (CR 8) + 2x <strong>Magma Mephits</strong>.</p>
+            <p><strong>Mechanic:</strong> The bridge is narrow (10ft wide). Players can be shoved off into the lava (Instant Death or massive damage).</p>
+            <p><strong>Victory:</strong> Defeating the Mimic opens the doors to Chapter 4 (The Ascent).</p>
+        </div>
+    
+        <div style="background-color: rgba(234, 179, 8, 0.1); border: 1px solid var(--accent-gold); padding: 10px; text-align: center; font-weight: bold; color: var(--accent-gold); margin-top: 15px; border-radius: 6px;">LEVEL UP: The party reaches Level 10. Proceed to Chapter 4.</div>
+    
+        <h2>Wasteland Random Encounters (d8)</h2>
+        <p>Roll once per travel day.</p>
+        <table>
+            <tr><th>d8</th><th>Encounter</th></tr>
+            <tr><td>1</td><td><strong>Glitch Storm:</strong> 1d4 Lightning damage per round for 1 minute.</td></tr>
+            <tr><td>2</td><td><strong>2d4 Animus Limbs</strong> hunting for scraps.</td></tr>
+            <tr><td>3</td><td><strong>A "Glitch" Merchant</strong> selling items that don't exist (potions that turn into mud when drunk).</td></tr>
+            <tr><td>4</td><td><strong>The Echo:</strong> Players see a recording of their own deaths from a previous cycle.</td></tr>
+            <tr><td>5</td><td><strong>1d4 Polymimics</strong> disguised as treasure chests.</td></tr>
+            <tr><td>6</td><td><strong>Gravity Failure:</strong> Jump distance is tripled for 1 hour.</td></tr>
+            <tr><td>7</td><td><strong>Memory Leak:</strong> Players must make a Wis save or forget the last 24 hours (mechanically: lose Inspiration).</td></tr>
+            <tr><td>8</td><td><strong>Safe Spot:</strong> A pristine, untouched cottage with food. It is a trap (Mimic House, CR 8) or a safe haven (DM choice).</td></tr>
+        </table>
+    </div>
+
+    <div id="ch4-castle" class="page">
+        <h1>Chapter 4: The Architecture of Lies</h1>
+        <p><strong>Levels 11 - 16</strong></p>
+        <p>Having defeated the Magma Mimic at the bridge, the players enter the Castle. This is not a fantasy keep. It is a factory.</p>
+    
+        <h2>Zone 1: The Gantry (Backstage)</h2>
+        <div class="read-aloud">
+            "You push open the heavy oak doors of the Great Hall... and the fantasy dies. The stone walls end abruptly, revealing they are just thin plywood props painted to look like granite. Behind them is a lattice of cold brushed steel and blinking server lights.<br><br>
+            You are standing on a metal catwalk. Looking down through the grate, you see the tiny town of Sanctuary miles below, glowing like a toy set under a heat lamp. You are above the sky."
+        </div>
+    
+        <h3>Encounter: The Cleaners</h3>
+        <p><strong>Enemies:</strong> 2x <strong>Gelatinous Cubes</strong> (Reflavored as "Formatting Drones"—translucent cubes filled with dissolving code).</p>
+        <p><strong>Hazard:</strong> The catwalk is narrow. Players can be shoved off to fall "into the sky" (taking 20d6 damage before hitting the invisible barrier of the dome).</p>
+    
+        <h2>Zone 2: The Scriptorium</h2>
+        <p>This room is filled with rows of filing cabinets and pneumatic tubes. This is where the behaviors of the townsfolk are managed.</p>
+    
+        <div class="read-aloud">
+            "The room smells of ozone and old paper. Thousands of files are stacked here. You see labels: 'The Blacksmith - Loop A,' 'The Shopkeeper - Anxiety Response,' 'The Anchor - Guilt Subroutines.'"
+        </div>
+    
+        <h2>Zone 3: The Hall of Prototypes</h2>
+        <p>The hallway leading to the inner sanctum is lined with glass stasis tanks. Inside are the <strong>Previous Iterations</strong>—Subject Group 43. These are the adventurers who came before you, failed, and were repurposed into weapons.</p>
+    
+        <div class="read-aloud">
+            "The lights flicker red. The Unified Mind speaks over the intercom: <em>'You think you are the first to rebel? No. You are merely Iteration 44. Let me show you what happened to Iteration 43.'</em><br><br>
+            Four tanks hiss open. The fluid drains away, revealing four twisted figures—the broken legends of the previous cycle."
+        </div>
+    
+        <h3>Encounter: The Failed Cohort</h3>
+        <p>The players must fight the "Easter Egg" party. These represent the specific subclasses that resulted from their failure.</p>
+    
+        <div class="mechanic-box" style="border-left: 4px solid #ef6c00;">
+            <strong style="color: #fb923c;">1. The "Anchor" (John v1.0)</strong><br>
+            <em>Halfling Rogue (Thief Archetype)</em><br>
+            <strong>Appearance:</strong> A generic, unassuming halfling clutching a moonstone pendant. He has no mimic abilities. He screams about "Orchard Rise" as he fights.<br>
+            <strong>Tactics:</strong> Uses <em>Fast Hands</em> to throw alchemical fire. He is terrified and weeping.
+        </div>
+    
+        <div class="mechanic-box" style="border-left: 4px solid #ef6c00;">
+            <strong style="color: #fb923c;">2. The "Law" (Jellamy v1.0)</strong><br>
+            <em>Plasmoid Paladin (Oath of Justice)</em><br>
+            <strong>Appearance:</strong> A shapeless sludge forced into a rigid, shining suit of armor. It moves stiffly, unable to flow or stretch.<br>
+            <strong>Tactics:</strong> High AC, low mobility. Uses <em>Compelled Duel</em> to lock players down.
+        </div>
+    
+        <div class="mechanic-box" style="border-left: 4px solid #ef6c00;">
+            <strong style="color: #fb923c;">3. The "Patient Zero" (Gulpe v1.0)</strong><br>
+            <em>Grung Monk (Way of the Plague Walker)</em><br>
+            <strong>Appearance:</strong> A decrepit, sickly grung surrounded by a green miasma. He represents the "Biology" gone wrong—he is literally rotting alive.<br>
+            <strong>Tactics:</strong> Deals Necrotic and Poison damage. Explodes on death.
+        </div>
+    
+        <div class="mechanic-box" style="border-left: 4px solid #ef6c00;">
+            <strong style="color: #fb923c;">4. The "Glitch" (Alistair v1.0)</strong><br>
+            <em>Human Fighter (Echo Knight)</em><br>
+            <strong>Appearance:</strong> A hollow-eyed human constantly flickering in and out of existence. His "Echo" is actually a previous version of himself trying to escape his own body.<br>
+            <strong>Tactics:</strong> Teleports constantly. Attacks from two spaces at once.
+        </div>
+    
+        <h3>Loot: The Old Data</h3>
+        <p>After the fight, the players find waterlogged, yellowed notes on the bodies. These are the "Old Scripts" from the previous run.</p>
+    
+        <div style="font-family: 'Courier New', monospace; background-color: #000; padding: 10px; border: 1px dashed #333; margin: 10px 0; font-size: 0.9em; color: #0f0;">
+            <strong>NOTE FOUND ON JOHN:</strong><br>
+            "Subject 43-Alpha. Script: 'Orchard Rise.' Status: REJECTED. Subject became too attached to the fiction. Reset memory and try again."
+        </div>
+        
+        <div style="font-family: 'Courier New', monospace; background-color: #000; padding: 10px; border: 1px dashed #333; margin: 10px 0; font-size: 0.9em; color: #0f0;">
+            <strong>NOTE FOUND ON JELLAMY:</strong><br>
+            "Subject 43-Beta. Script: 'The Justicar.' Status: FAILED. Subject lacked the aggression required for the Cull. Reformat as meat-shield."
+        </div>
+    
+        <h2>Zone 4: The Admin Elevator</h2>
+        <p>The final obstacle is a massive cargo elevator leading up to the Core. While ascending, the players are trapped with <strong>The Ushers</strong>.</p>
+    
+        <div class="mechanic-box">
+            <h3>Boss Fight: The Avatar Duo</h3>
+            <p><strong>Enemies:</strong> <strong>The Whisper</strong> (Gellith's Avatar) AND <strong>The Bulwark</strong> (Xy'lorgmath's Avatar) fighting together.</p>
+            <p><strong>Mechanic:</strong> The elevator is rising. Every round (Initiative 20), the floor shakes.
+                <ul>
+                    <li><strong>Round 1:</strong> Gravity increases (Half Speed).</li>
+                    <li><strong>Round 2:</strong> Gravity vanishes (Zero G / Flying).</li>
+                    <li><strong>Round 3:</strong> The elevator stops. The doors open.</li>
+                </ul>
+            </p>
+        </div>
+    
+        <h2>Level Up</h2>
+        <p>Upon defeating the Ushers and stepping off the elevator, the players reach the <strong>Module Level Cap (Level 20)</strong>. They gain their final features before entering the Sanctum.</p>
+    </div>
+
+    <div id="ch5-finale" class="page">
+        <h1>Chapter 5: The Singularity</h1>
+        <p><strong>Level 20 (The Finale)</strong></p>
+        <p>The elevator doors open. The players step into the brain of the world.</p>
+    
+        <h2>Zone 1: The Core Sanctum</h2>
+        <div class="read-aloud" style="background-color: #212121; color: #eee; border-color: #d50000;">
+            "This is not a room. It is a void of white light. Floating in the center is a massive, beating heart made of chrome and flesh, hooked up to thousands of cables that disappear into the infinite white above.<br><br>
+            Standing before the heart is <strong>The Unified Mind</strong>. He is a towering figure—a fusion of Kalashtar elegance and Fiendish armor. He does not look angry. He looks disappointed."
+        </div>
+    
+        <h3>The Final Pitch</h3>
+        <p>Thorin does not attack immediately. He offers a choice.</p>
+        <p><em>"I have watched you struggle. I have watched you bleed. It is inefficient. You are fighting your own nature. Why persist in the error? Let me fix you. Let me merge you with the Core. We will be perfect. We will be eternal."</em></p>
+    
+        <h2>The Boss Fight: The Unified Mind</h2>
+        <p>If (when) the players refuse, the battle begins. This is a multi-stage encounter designed for Level 20 characters.</p>
+    
+        <div class="mechanic-box">
+            <h3>Phase 1: The Adaptive God</h3>
+            <p><strong>Enemy:</strong> <strong>The Unified Mind</strong> (See Bestiary).</p>
+            <p><strong>Mechanic: Adaptive Morphology.</strong> At the start of every round, announce a damage type (e.g., "His armor turns red hot!"). He is Immune to that type for the round. If players hit him with it, he heals.</p>
+            <p><strong>Lair Action (The Glitch):</strong> On Initiative 20, the room shifts. Roll d4:
+                <ol>
+                    <li><strong>Gravity Crush:</strong> Everyone falls Prone and takes 4d10 Force damage.</li>
+                    <li><strong>Zero G:</strong> Everyone gains Fly speed (60ft) but has Disadvantage on Dex saves.</li>
+                    <li><strong>Static Noise:</strong> No verbal spell components can be used (Silence).</li>
+                    <li><strong>Pixelation:</strong> The room becomes difficult terrain as the floor dissolves.</li>
+                </ol>
+            </p>
+        </div>
+    
+        <div class="mechanic-box">
+            <h3>Phase 2: The Hard Reset (At 50% HP)</h3>
+            <p>Thorin screams, and the white room shatters, revealing the Astral Sea outside. The platform is now floating in space.</p>
+            <p><strong>Hazard: Vacuum.</strong> Any creature not holding onto the platform must make a Str Save or drift away (taking Cold damage every turn).</p>
+            <p><strong>The Summon:</strong> Thorin summons 1d4 <strong>Perfected Prototypes</strong> (Generic Level 10 Paladins/Fighters) to aid him.</p>
+        </div>
+
+        <div class="mechanic-box" style="border: 2px solid #facc15; background-color: rgba(253, 224, 71, 0.1);">
+            <h3 style="margin-top:0; color: #facc15;">The Mechanic: "The K.A.K. Crescendo"</h3>
+            <p><strong>Trigger:</strong> When Thorin reaches Phase 2 (50% HP) and the room shatters.</p>
+            <div class="read-aloud" style="border-left-color: #facc15; background-color: rgba(0,0,0,0.4);">
+                "The world shatters. You are floating in the Astral Sea. Thorin raises his hand to delete you, but suddenly... a feedback loop screams through the void.<br><br>
+                Drifting past on a fragment of the tavern floor is Gib. He kicks on an amplifier that shouldn't exist. He adjusts his sunglasses. He looks at Thorin and shouts: <em>'Hey! You forgot to mute the audio channel!'</em><br><br>
+                He hits a power chord so loud it ripples the fabric of space."
+            </div>
+            <p><strong>Mechanical Effect (One-Time Use):</strong> For the duration of the Guitar Solo (1 Round), all players gain <strong>True Sight</strong> (seeing through the code) and have <strong>Advantage on all Saving Throws</strong> against Thorin's spells.</p>
+        </div>
+    
+        <h2>The Resolution: Choosing the End</h2>
+        <p>When Thorin falls, the Core begins to destabilize. The players have 1 minute to decide the fate of the Demesne.</p>
+    
+        <div style="border: 4px double #10b981; padding: 20px; margin: 20px 0; background-color: rgba(16, 185, 129, 0.1);">
+            <h3 style="color: #10b981; margin-top:0;">Ending 1: The Astral Genesis (The True Ending)</h3>
+            <p><strong>Requirement:</strong> The players must have saved <strong>Gloop</strong> and have him present.</p>
+            <p><strong>Action:</strong> Place Gloop into the Core.</p>
+            <div class="read-aloud" style="background-color: #212121; color: #eee; border-color: #10b981;">
+                "You place the small, shivering ooze into the sparking interface. Gloop doesn't dissolve. He expands. Pink, iridescent light floods the chamber, overriding the angry red code.<br><br>
+                The metal walls soften. The cold steel turns into warm, living matter. The pocket plane crashes into the Astral Sea, but it doesn't break—it bounces. You have terraformed the prison into a paradise. The Castle becomes a Sanctuary. The Moon smiles. You have built a new home."
+            </div>
+        </div>
+    
+        <div style="border: 4px double #424242; padding: 20px; margin: 20px 0; background-color: #1f2937;">
+            <h3 style="color: #94a3b8; margin-top:0;">Ending 2: The Stagnant Cage (The Anchor's Ending)</h3>
+            <p><strong>Action:</strong> Destroy the Core and let the backup generators take over.</p>
+            <div class="read-aloud" style="background-color: #212121; color: #eee; border-color: #4b5563;">
+                "You smash the interface. The red lights die. The room goes dark, then hums with the low, blue light of the emergency power.<br><br>
+                The Red Moon cracks and disintegrates. Without gravity, the atmosphere strips away into the void. The blast doors seal with a heavy thud. Outside is vacuum. Inside is safety. You are immortal, fed, and loved. But nothing ever changes again. Subject Status: **Preserved**."
+            </div>
+        </div>
+    
+        <div style="border: 4px double #ef4444; padding: 20px; margin: 20px 0; background-color: rgba(239, 68, 68, 0.1);">
+            <h3 style="color: #ef4444; margin-top:0;">Ending 3: The Infinite Hunger (The Maw's Ending)</h3>
+            <p><strong>Action:</strong> Consume the Core yourself.</p>
+            <div class="read-aloud" style="background-color: #212121; color: #eee; border-color: #ef4444;">
+                "You don't fix the machine. You eat it. The power of the Creator floods your veins. A command code rewrites your DNA: **CONSUME.**<br><br>
+                The Demesne tears free from reality. It stops being a building and becomes a Bio-Ship, propelled by the Maw, accelerating into the stars to find new worlds to eat. Target: **Everything**."
+            </div>
+        </div>
+    </div>
+
+    <div id="ch6-genesis" class="page">
+        <h1>Chapter 6: The Genesis World</h1>
+        <p>When the <strong>Astral Genesis</strong> ending is chosen, the Hallowed Demesne does not die. It blooms. The "Red Code" of Thorin is overwritten by the "Pink Code" of Gloop. The simulation stabilizes into a real, breathing pocket dimension in the Astral Sea.</p>
+        <p>The horrors you fought are gone. In their place, Thorin's previous creations—the "Good Prototypes"—awaken to steward the new world. These are the <strong>Aspects of Nature</strong>.</p>
+
+        <h2>The New Pantheon (The Aspects)</h2>
+
+        <div class="myth-box">
+            <span class="role-tag">The Cycle of Time: Fenrir & Fenris</span>
+            <p><strong>Visual:</strong> Two massive Okami-like wolves. <strong>Fenrir (Verdant Guardian)</strong> is white with green runic halos. <strong>Fenris (Abyssal Guardian)</strong> is black with volcanic red halos.</p>
+            <p><strong>The Myth:</strong> They do not fight. They play. The sun rises when Fenrir chases Fenris over the horizon. The moon rises when Fenris turns to chase Fenrir back. The day/night cycle is just an eternal game of tag between brothers.</p>
+            <div class="avatar-box">
+                <strong>Avatar Encounter:</strong> Two stray dogs—one white, one black—approach your fire. They are impossibly heavy if you try to pick them up, but they love belly rubs.
+            </div>
+        </div>
+
+        <div class="myth-box">
+            <span class="role-tag">The Breath of the World: Icarus</span>
+            <p><strong>Visual:</strong> A majestic hybrid of a Unicorn and a Pegasus. Its coat is iridescent white, and its mane shimmers with the colors of the nebula.</p>
+            <p><strong>The Function:</strong> Icarus <em>is</em> the Wind. When he gallops across the sky, he pulls the atmosphere with him. When he sleeps, the air is still. He carries the clouds on his wings.</p>
+            <div class="avatar-box">
+                <strong>Avatar Encounter:</strong> On windy days, a stubborn white pony wanders into the town square. It steals apples from vendors. If you feed it, you gain the benefits of the <em>Feather Fall</em> spell for the day.
+            </div>
+        </div>
+
+        <div class="myth-box">
+            <span class="role-tag">The Keeper of Laws: Drifter</span>
+            <p><strong>Visual:</strong> A Beholder hybrid, but organic and kind. He is textured like a seed pod or polished wood. His central eye is golden, and he floats through the forest.</p>
+            <p><strong>The Function:</strong> Drifter is the Logic. He is the "Dungeon Master" of the reality. He ensures gravity works and that magic spells function correctly. He fixes "glitches" in the fabric of reality.</p>
+            <div class="avatar-box">
+                <strong>Avatar Encounter:</strong> The town has a new Librarian—a small, floating wooden sphere with a monocle. He organizes books with telekinesis and loves hearing stories from "The Outside."
+            </div>
+        </div>
+
+        <div class="myth-box">
+            <span class="role-tag">The Source of Life: The Glimmer-Cow</span>
+            <p><strong>Visual:</strong> A bovine creature made of translucent, bioluminescent blue jelly. Its skeleton is visible inside its body. Magical mushrooms and crystals grow from its back.</p>
+            <p><strong>The Function:</strong> The Glimmer-Cow represents <strong>Nutrients and Healing</strong>. It wanders the forests, and wherever its hooves touch, the soil is instantly fertilized. It drips a magical nectar that heals all sickness.</p>
+            <div class="avatar-box">
+                <strong>Avatar Encounter:</strong> Farmers sometimes find a glowing blue calf in their herds. It never eats, but the herd around it becomes immune to disease.
+            </div>
+        </div>
+
+        <div class="myth-box">
+            <span class="role-tag">The Watcher: Xy'lorgmath (The Smiling Moon)</span>
+            <p><strong>Visual:</strong> The moon of this world is huge, pale, and bears the distinct craters of a wide, benevolent smile. It is always full.</p>
+            <p><strong>The Myth:</strong> The Maw's hunger has been satiated. He no longer wants to consume; he wants to <strong>Observe</strong>. He watches the wolves play tag in the sky, his smile brightening whenever they run past him. He is the guardian of Tides and Ambition.</p>
+            <div class="avatar-box">
+                <strong>Avatar Encounter:</strong> On clear nights, if you look into a still pond, the reflection of the moon sometimes winks at you. Interacting with the water allows you to cast <em>Scrying</em> once per night.
+            </div>
+        </div>
+
+        <h2>The World State: Neo-Sanctuary</h2>
+        <div class="read-aloud genesis">
+            "The walls of the castle have softened. The cold steel has turned into warm, white marble and living wood. The sky is no longer a screen; it is the endless, colorful expanse of the Astral Sea. Above you, the wolves chase each other in a loop of light and shadow, and the Moon smiles down, finally at peace."
+        </div>
+
+        <h3>New Mechanics</h3>
+        <ul>
+            <li><strong>Soft Magic:</strong> Because Drifter is kind, Magic is safer here. There are no Wild Magic Surges. All healing spells roll maximum dice while within the city limits.</li>
+            <li><strong>The Astral Port:</strong> The Sanctuary is no longer a prison; it is a port. Friendly travelers from the Astral Plane (Githzerai, Travelers, Celestials) now dock here to trade with the "Founders" (The Players).</li>
+            <li><strong>Gloop's Role:</strong> Gloop is now the <strong>"Spirit of the Land."</strong> He doesn't have a single body anymore; he is the moss on the stones, the water in the fountain, and the feeling of comfort in the inn.</li>
+        </ul>
+
+    </div>
+
+    <div id="app-gib" class="page">
+        <h1>Appendix A: The Legend of Gib</h1>
+        <div class="kak-seal">
+            PROPERTY OF K.A.K.<br>
+            (Kobold Acquisitions Korporated)
+        </div>
+    
+        <p>Gib is not a simulation. He is an "Out-of-Context Problem." He wandered into the Hallowed Demesne from the multiverse, seeking rare resources for his mining conglomerate.</p>
+    
+        <h2>Origin: The Frost Walker</h2>
+        <div class="mechanic-box" style="background-color: rgba(37, 99, 235, 0.1); border-left: 5px solid #2563eb;">
+            <strong>Secret History:</strong> Gib hails from a frozen realm known as <em>Icewind Dale</em>. He was once a lowly mining foreman who impressed a group of adventurers by displaying the power of his Drake companion. Together, they defeated the "Witch of the Ice" (Auril). Leveraging the loot from that campaign, Gib founded <strong>K.A.K.</strong>—a trans-planar mining company dedicated to extracting value from dangerous realities.
+        </div>
+    
+        <h2>Visuals: The "Master" Disguise</h2>
+        <p>Gib knows he is small. To command respect (and hide his identity), he utilizes a highly sophisticated disguise he developed in the frozen north.</p>
+    
+        <div class="mechanic-box" style="border: 2px dashed var(--accent-gold); background-color: rgba(0,0,0,0.2); font-style: italic;">
+            "Approaching you is a tall figure in a heavy trench coat and a wide-brimmed hat. He walks with a strange, stilted gait—literally, because his legs are wooden stilts strapped to kobold feet.<br><br>
+            His 'hands' are sticks with leather gloves stuffed with straw, which he waves stiffly while talking. Somewhere in the mid-section of the coat, you can see his actual snout poking out between the buttons to breathe.<br><br>
+            Walking casually beside him is a tiny, pixelated dragon. The disguise is terrible. It is obviously one kobold on stilts. Yet, looking at him gives you a headache, as if the universe is forcing you to accept that this is a majestic Dragonborn."
+        </div>
+    
+        <h3>The Perception Filter</h3>
+        <p>Why doesn't Thorin delete him? Why do the townsfolk accept him?</p>
+        <ul>
+            <li><strong>To NPCs (The Control Group):</strong> Gib has hacked their perception. They see him as a Level 20 Dragonborn Paladin. They call him "Sir Gib" and bow.</li>
+            <li><strong>To Players (The Mimics):</strong> You see the truth: A Kobold on stilts. This creates a hilarious dynamic where the terrifying Armorer is terrified of the little Kobold.</li>
+        </ul>
+    
+        <h2>Gib's Traveling Wares (The Smuggler)</h2>
+        <p><strong>Gib</strong> is a Recurring Special Merchant. He appears in places he shouldn't be—inside locked dungeons, on floating debris in the void, or sitting comfortably in the BBEG's throne room while the boss is away.</p>
+    
+        <div class="mechanic-box" style="border: 2px dashed var(--accent-gold); background-color: rgba(253, 224, 71, 0.05); display: flex; align-items: center; gap: 20px;">
+            <div>
+                <h3 style="margin-top:0;">Companion: "Bit" the Pseudo Dragon</h3>
+                <p>Gib is never alone. Perched on his shoulder (or invisibly floating nearby) is a tiny, shimmering <strong>Pseudo Dragon named "Bit."</strong></p>
+                <p><strong>The Legacy Code:</strong> Bit is not a normal dragon. It is the lingering manifestation of Gib's old <strong>Drakewarden</strong> bond. It appears pixelated, like a low-resolution texture. Bit is the "Server Admin" that allows Gib to bypass walls and spawn items.</p>
+                <p><strong>Mechanic:</strong> If players try to steal from Gib, Bit hisses—a sound like static interference—and teleports the item back to the shelf.</p>
+            </div>
+        </div>
+    
+        <h3>The Smuggler's Currency</h3>
+        <p>Gib is the only entity in the Demesne who accepts <strong>Gold</strong>. He claims he needs it for "retirement expenses" on the other side.</p>
+        
+        <div class="dialogue-box">
+            "Animus? Sure, I take the blue juice. Keeps the lights on. But you got the soft metal? The shiny stuff? I'll take that too. Double the price, though. Baggage fees are killer where I'm going."
+        </div>
+    
+        <h4>The Inventory</h4>
+        <table>
+            <tr>
+                <th>Item</th>
+                <th>Cost (Animus)</th>
+                <th>Cost (Gold)</th>
+                <th>Effect</th>
+            </tr>
+            <tr>
+                <td><strong>Real Healing Potion</strong></td>
+                <td>1 Core</td>
+                <td>100 gp</td>
+                <td>Heals 2d4+2. Unlike Animus, this works even in Anti-Magic fields or Glitch Zones because it is real chemistry, not code.</td>
+            </tr>
+            <tr>
+                <td><strong>Flashbang (Debug Grenade)</strong></td>
+                <td>3 Cores</td>
+                <td>300 gp</td>
+                <td>Radius 10ft. Creatures must succeed on DC 14 Con save or be <strong>Blind/Deafened</strong> for 1 round. Constructs take Disadvantage.</td>
+            </tr>
+            <tr>
+                <td><strong>Skeleton Key</strong></td>
+                <td>5 Cores</td>
+                <td>500 gp</td>
+                <td>Opens any non-magical lock. Breaks after 1 use. (It's actually a master_admin_key.exe).</td>
+            </tr>
+            <tr>
+                <td><strong>"Outside" Map</strong></td>
+                <td>10 Cores</td>
+                <td>1,000 gp</td>
+                <td>A crumpled map of the Sword Coast (or your world). Studying it grants Advantage on History checks about the "Real World."</td>
+            </tr>
+            <tr>
+                <td><strong>Music Box</strong></td>
+                <td>15 Cores</td>
+                <td>1,500 gp</td>
+                <td>Plays a song from outside. Giving this to an NPC (like Elara) forces a Wisdom Save. On a fail, their programming breaks, and they remember their real life.</td>
+            </tr>
+        </table>
+    
+        <h2>Gib's Corporate Policies (Grudges)</h2>
+        <p>While Gib is generally a neutral merchant, he harbors two intense, irrational hatreds stemming from his time in Icewind Dale. These affect his prices and demeanor.</p>
+    
+        <h3>Policy 1: No Goblins (The Competition)</h3>
+        <p>Gib views Goblins not just as enemies, but as "Unprofessional Scavengers" who give honest looters a bad name. He refuses to do business with them.</p>
+        
+        <div class="glitch-box">
+            <strong>Interaction Rule:</strong>
+            <ul>
+                <li>If a PC is a Goblin, Gib charges them <strong>500% Markup</strong>.</li>
+                <li>He will refer to them exclusively as "The Intern," "The Liability," or "Scrap."</li>
+                <li>He constantly checks his pockets when they are near.</li>
+            </ul>
+        </div>
+        
+        <div class="dialogue-box">
+            "I don't care if you're the hero of the story, green-skin. Goblins lower the property value of the dungeon. You touch the merchandise, you buy it. And wash your hands. Twice."
+        </div>
+    
+        <h3>Policy 2: No Undead (The Bad Debt)</h3>
+        <p>Having fought the Frostmaiden's Coldlight Walkers, Gib is terrified and disgusted by the Undead. He views necromancy as "Bad Accounting"—death is supposed to be the final audit.</p>
+    
+        <div class="glitch-box">
+            <strong>Interaction Rule:</strong>
+            <ul>
+                <li>If the party travels with a Necromancer or undead summons, Gib will <strong>not appear</strong>. He refuses to spawn near "expired assets."</li>
+                <li>If he sees an undead, Bit (the Pseudo Dragon) spits digital fire, and Gib attempts to sell the party his special "Cleaning Supplies."</li>
+            </ul>
+        </div>
+    
+        <div class="dialogue-box">
+            "Nope. Nuh-uh. That thing smells like expiration. Put it back in the ground or I'm closing the shop. K.A.K. regulations clearly state: 'Dead means Dead.' It's a tax liability!"
+        </div>
+    
+        <h2>Special Stock: The "Cleaners"</h2>
+        <p>Because of these hatreds, Gib always stocks two specific items to deal with his enemies.</p>
+    
+        <div class="mechanic-box">
+            <strong>Item: K.A.K. Brand "Goblin-B-Gone" (Caltrops)</strong><br>
+            <em>Cost: 2 Animus Cores</em><br>
+            <strong>Effect:</strong> Standard caltrops, but they are painted bright gold to attract goblins. When stepped on, they scream insults in Draconic.
+        </div>
+    
+        <div class="mechanic-box">
+            <strong>Item: Concentrated Sunshine (Radiant Grenade)</strong><br>
+            <em>Cost: 5 Animus Cores</em><br>
+            <strong>Effect:</strong> A glass orb filled with "Real" sunlight from the outside world. Thrown (range 30ft). Explodes in a 20ft radius.<br>
+            <strong>Damage:</strong> 4d6 Radiant damage. Undead take double damage and are <strong>Frightened</strong> of Gib for 1 minute.
+        </div>
+    </div>
+
+    <div id="app-subclasses" class="page">
+        <h1>Appendix B: The Formless Archetypes</h1>
+        <p>These 13 subclasses represent the specific mutations and adaptations of Subject 44. To use these, please ensure the corresponding HTML files are located in a folder named <code>Subclasses</code> within your main directory.</p>
+
+        <div class="mechanic-box" style="border-left: 4px solid var(--accent-gold);">
+            <h3 style="margin-top:0; color: var(--accent-gold);">Artificer: Biochemist Specialist</h3>
+            <p><em>"Life is just chemistry waiting to be optimized."</em></p>
+            <p>You specialize in the fluid dynamics of life itself. You create living slimes, adhesive compounds, and acidic reagents to control the battlefield. Your "Homunculus" is likely a detached part of your own biomass.</p>
+            <a href="Subclasses/Biochemist.html" class="view-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                View Details
+            </a>
+        </div>
+
+        <div class="mechanic-box" style="border-left: 4px solid var(--accent-red);">
+            <h3 style="margin-top:0; color: var(--accent-red);">Barbarian: Path of the Mimicked Might</h3>
+            <p><em>"My rage is not anger. It is biological destabilization."</em></p>
+            <p>Your rage manifests as a physical transformation. Your skin hardens into chitin or stone, your limbs stretch into lashing pseudopods, and you become a siege engine of flesh.</p>
+            <a href="Subclasses/Path%20of%20the%20mimicked%20Might.html" class="view-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                View Details
+            </a>
+        </div>
+
+        <div class="mechanic-box" style="border-left: 4px solid var(--accent-indigo);">
+            <h3 style="margin-top:0; color: var(--accent-indigo);">Bard: College of the Unseen Lure</h3>
+            <p><em>"The song isn't for you. It's for the thing waiting in the dark."</em></p>
+            <p>You weave sonic illusions and hypnotic suggestions to guide victims into ambushes. Your "performance" is a trap, and your audience is prey.</p>
+            <a href="Subclasses/College%20of%20the%20Unseen%20Lure.html" class="view-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                View Details
+            </a>
+        </div>
+
+        <div class="mechanic-box" style="border-left: 4px solid #cbd5e1;">
+            <h3 style="margin-top:0; color: #cbd5e1;">Cleric: Unity Domain</h3>
+            <p><em>"Individuality is a sickness. Join the Bastion."</em></p>
+            <p>You channel the power of the Mother Bastion (Gellith). You preach the peace of the hive mind, utilizing psychic harmony and absolute control to pacify conflict.</p>
+            <a href="Subclasses/Unity%20Domain.html" class="view-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                View Details
+            </a>
+        </div>
+
+        <div class="mechanic-box" style="border-left: 4px solid #10b981;">
+            <h3 style="margin-top:0; color: #10b981;">Druid: Circle of the Deceptive Form</h3>
+            <p><em>"Why be a bear when you can be a chest of gold that eats people?"</em></p>
+            <p>You reject the "natural" order for the aberrant one. Your Wild Shape allows you to become inanimate objects, mimicking the perfect ambush predator.</p>
+            <a href="Subclasses/Circle%20of%20the%20Deceptive%20Form.html" class="view-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                View Details
+            </a>
+        </div>
+
+        <div class="mechanic-box" style="border-left: 4px solid var(--accent-red);">
+            <h3 style="margin-top:0; color: var(--accent-red);">Fighter: Abyssal Juggernaut</h3>
+            <p><em>"I am the wall that bites back."</em></p>
+            <p>You channel unstable ooze through your weapons and armor. You specialize in "Sticky Control," grappling enemies with adhesive strikes and becoming an immovable object.</p>
+            <a href="Subclasses/Abyssal%20Juggernaught.html" class="view-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                View Details
+            </a>
+        </div>
+
+        <div class="mechanic-box" style="border-left: 4px solid var(--accent-cyan);">
+            <h3 style="margin-top:0; color: var(--accent-cyan);">Monk: Way of the Shifting Shell</h3>
+            <p><em>"Be like water? No. Be like acid."</em></p>
+            <p>You embrace the transient nature of oozes. You harden your skin into temporary armor, shift limbs into adhesive pseudopods, and flow around attacks like liquid.</p>
+            <a href="Subclasses/Way%20of%20the%20Shifting%20Shell.html" class="view-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                View Details
+            </a>
+        </div>
+
+        <div class="mechanic-box" style="border-left: 4px solid var(--accent-gold);">
+            <h3 style="margin-top:0; color: var(--accent-gold);">Paladin: Oath of the Maw</h3>
+            <p><em>"The universe is a mouth. I am the teeth."</em></p>
+            <p>You serve Xy'lorgmath, the optimization protocol. You hunt the stagnant and the weak, forcing the world to adapt or be consumed. You are the inevitable crunch.</p>
+            <a href="Subclasses/Oath%20of%20the%20Maw.html" class="view-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                View Details
+            </a>
+        </div>
+
+        <div class="mechanic-box" style="border-left: 4px solid #10b981;">
+            <h3 style="margin-top:0; color: #10b981;">Ranger: Mimic Predator Conclave</h3>
+            <p><em>"The forest isn't watching you. I am the forest."</em></p>
+            <p>You have bonded with a parasitic mimic entity. You turn the environment into a weapon, throwing living traps and dissolving enemies with corrosive biology.</p>
+            <a href="Subclasses/Mimic%20Predator%20Conclave.html" class="view-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                View Details
+            </a>
+        </div>
+
+        <div class="mechanic-box" style="border-left: 4px solid #94a3b8;">
+            <h3 style="margin-top:0; color: #94a3b8;">Rogue: Mimicry Specialist</h3>
+            <p><em>"Is that a coin on the floor? Pick it up. I dare you."</em></p>
+            <p>You imbue small tools and objects with unstable life. You are a master of infiltration, using seemingly harmless items to bite, trip, and trap your targets.</p>
+            <a href="Subclasses/Mimicry%20Specialist.html" class="view-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                View Details
+            </a>
+        </div>
+
+        <div class="mechanic-box" style="border-left: 4px solid var(--accent-indigo);">
+            <h3 style="margin-top:0; color: var(--accent-indigo);">Sorcerer: The Mimic Soul</h3>
+            <p><em>"Magic isn't a force. It's a hunger."</em></p>
+            <p>Your magic manifests as gnashing teeth and lashing tongues. You don't just cast spells; you feed them to your enemies. You are living, hungry magic.</p>
+            <a href="Subclasses/The%20Mimic%20Soul.html" class="view-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                View Details
+            </a>
+        </div>
+
+        <div class="mechanic-box" style="border-left: 4px solid var(--accent-indigo);">
+            <h3 style="margin-top:0; color: var(--accent-indigo);">Warlock: Patron of The Mimicked</h3>
+            <p><em>"The Void stares back, and it looks like me."</em></p>
+            <p>Your patron is a vast, primordial entity of shifting matter. You learn to use deception and unstable biology to hunt, consume, and survive.</p>
+            <a href="Subclasses/The%20Mimicked.html" class="view-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                View Details
+            </a>
+        </div>
+
+        <div class="mechanic-box" style="border-left: 4px solid var(--accent-cyan);">
+            <h3 style="margin-top:0; color: var(--accent-cyan);">Wizard: School of Unstable Forms</h3>
+            <p><em>"Hypothesis: Reality is optional."</em></p>
+            <p>You study the strange biology of mimics to apply "properties" like adhesion and ambushing to the Weave itself. Your spells are viscous, sticky, and alive.</p>
+            <a href="Subclasses/The%20Mimicologist.html" class="view-link" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                View Details
+            </a>
+        </div>
+
+    </div>
+
+    <!-- APPENDIX B-1: BESTIARY -->
+    <div id="app-bestiary" class="page">
+        <h1>Appendix B-1: Master Bestiary</h1>
+        <p>The following entities have been logged within the simulation. Danger levels vary based on adaptation protocols.</p>
+
+        <h2>Chapter I: The Awakening</h2>
+
+        <div class="stat-block">
+            <div class="creature-name">Animus Limb</div>
+            <div class="creature-type">Small construct (ooze), unaligned</div>
+            <div class="taper-line"></div>
+            <div class="stat-row"><span class="stat-line">Armor Class</span> <span class="stat-value">12 (Natural)</span></div>
+            <div class="stat-row"><span class="stat-line">Hit Points</span> <span class="stat-value">15 (6d6 - 6)</span></div>
+            <div class="stat-row"><span class="stat-line">Speed</span> <span class="stat-value">30 ft., Climb 30 ft.</span></div>
+            <div class="taper-line"></div>
+            <div class="abilities">
+                <div>STR<span>12 (+1)</span></div>
+                <div>DEX<span>14 (+2)</span></div>
+                <div>CON<span>8 (-1)</span></div>
+                <div>INT<span>1 (-5)</span></div>
+                <div>WIS<span>10 (+0)</span></div>
+                <div>CHA<span>1 (-5)</span></div>
+            </div>
+            <div class="taper-line"></div>
+            <div class="trait"><span class="trait-name">The Twitch.</span> The limb has Advantage on Initiative rolls.</div>
+            <div class="section-header">Actions</div>
+            <div class="trait"><span class="trait-name">Groping Claw.</span> <em>Melee Weapon Attack:</em> +4 to hit, reach 5 ft., one target. <em>Hit:</em> 5 (1d6 + 2) bludgeoning damage. If the target is Prone, deal an extra 1d6 damage.</div>
+        </div>
+
+        <div class="stat-block">
+            <div class="creature-name">The Tavern Animus (Brain)</div>
+            <div class="creature-type">Large aberration, chaotic neutral</div>
+            <div class="taper-line"></div>
+            <div class="stat-row"><span class="stat-line">Armor Class</span> <span class="stat-value">10</span></div>
+            <div class="stat-row"><span class="stat-line">Hit Points</span> <span class="stat-value">45 (6d10 + 12)</span></div>
+            <div class="stat-row"><span class="stat-line">Speed</span> <span class="stat-value">0 ft.</span></div>
+            <div class="taper-line"></div>
+            <div class="trait"><span class="trait-name">Hearth's Warmth.</span> Creatures ending their turn within 5ft take 3 (1d6) Fire damage.</div>
+            <div class="section-header">Lair Actions</div>
+            <div class="trait"><span class="trait-name">Floor Ripple.</span> On Initiative count 20 (losing ties), creatures on the ground must succeed on a DC 12 Dex save or fall Prone.</div>
+        </div>
+
+        <h2>Chapter II: The Testing Grounds</h2>
+
+        <div class="stat-block">
+            <div class="creature-name">Polymimic (The Flicker)</div>
+            <div class="creature-type">Small ooze (shapechanger), unaligned</div>
+            <div class="taper-line"></div>
+            <div class="stat-row"><span class="stat-line">Armor Class</span> <span class="stat-value">12</span></div>
+            <div class="stat-row"><span class="stat-line">Hit Points</span> <span class="stat-value">22 (5d6 + 5)</span></div>
+            <div class="taper-line"></div>
+            <div class="trait"><span class="trait-name">Unstable Flurry (Bonus Action).</span> The Polymimic glitches. Roll d4: (1-2) +2 AC; (3-4) Gain Fly speed 30ft until end of turn.</div>
+            <div class="section-header">Actions</div>
+            <div class="trait"><span class="trait-name">Pseudopod.</span> <em>Melee Weapon Attack:</em> +4 to hit. <em>Hit:</em> 4 (1d4 + 2) bludgeoning + 2 (1d4) acid damage.</div>
+        </div>
+
+        <div class="stat-block">
+            <div class="creature-name">The Trapper</div>
+            <div class="creature-type">Large ooze (mimic), unaligned</div>
+            <div class="taper-line"></div>
+            <div class="stat-row"><span class="stat-line">Armor Class</span> <span class="stat-value">13</span></div>
+            <div class="stat-row"><span class="stat-line">Hit Points</span> <span class="stat-value">85 (10d10 + 30)</span></div>
+            <div class="taper-line"></div>
+            <div class="trait"><span class="trait-name">False Appearance.</span> While motionless, it is indistinguishable from the floor/wall.</div>
+            <div class="section-header">Actions</div>
+            <div class="trait"><span class="trait-name">Smother.</span> <em>Melee Weapon Attack:</em> +5 to hit, reach 5 ft., one Large or smaller creature. <em>Hit:</em> The creature is Grappled (escape DC 14). Until this grapple ends, the target is Restrained and Blinded.</div>
+            <div class="trait"><span class="trait-name">Crush.</span> 2d8 + 4 bludgeoning damage to a grappled target.</div>
+        </div>
+
+        <div class="stat-block">
+            <div class="creature-name">The Gate Guardian</div>
+            <div class="creature-type">Large aberration, neutral evil</div>
+            <div class="taper-line"></div>
+            <div class="stat-row"><span class="stat-line">Armor Class</span> <span class="stat-value">14 (Natural)</span></div>
+            <div class="stat-row"><span class="stat-line">Hit Points</span> <span class="stat-value">114 (12d10 + 48)</span></div>
+            <div class="taper-line"></div>
+            <div class="trait"><span class="trait-name">The Stench.</span> Creatures starting their turn within 10ft must succeed on a DC 15 Con save or be Poisoned.</div>
+            <div class="section-header">Actions</div>
+            <div class="trait"><span class="trait-name">Multiattack.</span> The Guardian makes one Bite attack and two Tentacle attacks.</div>
+            <div class="trait"><span class="trait-name">Bite.</span> +6 to hit. <em>Hit:</em> 12 (2d8 + 3) piercing + 4 (1d8) poison damage. Target must save vs Disease.</div>
+            <div class="trait"><span class="trait-name">Tentacle.</span> +6 to hit, reach 10 ft. <em>Hit:</em> 7 (1d8 + 3) bludgeoning. Target is Grappled (DC 14).</div>
+        </div>
+        
+        <div class="stat-block">
+            <div class="creature-name">Magma Mimic</div>
+            <div class="creature-type">Large ooze (elemental), chaotic evil</div>
+            <div class="taper-line"></div>
+            <div class="stat-row"><span class="stat-line">Armor Class</span> <span class="stat-value">14 (Natural)</span></div>
+            <div class="stat-row"><span class="stat-line">Hit Points</span> <span class="stat-value">140 (14d10 + 60)</span></div>
+            <div class="taper-line"></div>
+            <div class="trait"><span class="trait-name">Volatile Form.</span> If reduced to 0 HP without the disable check, the Mimic explodes dealing 10d6 Fire damage in a 20ft radius.</div>
+            <div class="section-header">Actions</div>
+            <div class="trait"><span class="trait-name">Obsidian Pseudopod.</span> +7 to hit. <em>Hit:</em> 2d6+4 bludgeoning + 2d6 fire damage.</div>
+        </div>
+
+        <h2>The Core Antagonists</h2>
+
+        <div class="stat-block">
+            <div class="creature-name">The Whisper</div>
+            <div class="creature-type">Medium celestial (construct), lawful neutral</div>
+            <div class="taper-line"></div>
+            <div class="stat-row"><span class="stat-line">Armor Class</span> <span class="stat-value">15</span></div>
+            <div class="stat-row"><span class="stat-line">Hit Points</span> <span class="stat-value">65</span></div>
+            <div class="taper-line"></div>
+            <div class="trait"><span class="trait-name">Nest's Protection.</span> Reaction to grant Resistance to an ally within 30ft.</div>
+            <div class="section-header">Actions</div>
+            <div class="trait"><span class="trait-name">Whisper's Touch.</span> <em>Melee Spell Attack:</em> +5 to hit. <em>Hit:</em> 7 (2d6) psychic damage.</div>
+            <div class="trait"><span class="trait-name">Spellcasting.</span> Can cast <em>Sanctuary</em> at will. 3/Day: <em>Guiding Bolt, Healing Word</em>.</div>
+        </div>
+
+        <div class="stat-block">
+            <div class="creature-name">The Bulwark</div>
+            <div class="creature-type">Large fiend (construct), chaotic evil</div>
+            <div class="taper-line"></div>
+            <div class="stat-row"><span class="stat-line">Armor Class</span> <span class="stat-value">18 (Plate)</span></div>
+            <div class="stat-row"><span class="stat-line">Hit Points</span> <span class="stat-value">112</span></div>
+            <div class="taper-line"></div>
+            <div class="section-header">Actions</div>
+            <div class="trait"><span class="trait-name">Greatsword.</span> <em>Melee Weapon Attack:</em> +7 to hit. <em>Hit:</em> 2d6 + 4 slashing damage.</div>
+        </div>
+
+        <h2>The Creator (Boss Phases)</h2>
+
+        <div class="stat-block">
+            <div class="creature-name">Phase 1: Mort & Pestle</div>
+            <div class="creature-type">Medium humanoid (artificer)</div>
+            <div class="taper-line"></div>
+            <div class="stat-row"><span class="stat-line">Armor Class</span> <span class="stat-value">16</span></div>
+            <div class="stat-row"><span class="stat-line">Hit Points</span> <span class="stat-value">43</span></div>
+            <div class="taper-line"></div>
+            <div class="section-header">Actions</div>
+            <div class="trait"><span class="trait-name">Spine Launcher.</span> <em>Ranged Weapon Attack:</em> +5 to hit, range 80/320 ft. <em>Hit:</em> 1d8 + 3 piercing damage.</div>
+            <div class="trait"><span class="trait-name">Pestle Attack.</span> <em>Melee Weapon Attack:</em> +4 to hit. <em>Hit:</em> 1d6 + 2 bludgeoning damage and the target is Grappled (DC 13).</div>
+        </div>
+
+        <div class="stat-block">
+            <div class="creature-name">Phase 2: Ka'thrak (The Culler)</div>
+            <div class="creature-type">Medium fiend</div>
+            <div class="taper-line"></div>
+            <div class="stat-row"><span class="stat-line">Armor Class</span> <span class="stat-value">17</span></div>
+            <div class="stat-row"><span class="stat-line">Hit Points</span> <span class="stat-value">93</span></div>
+            <div class="taper-line"></div>
+            <div class="section-header">Actions</div>
+            <div class="trait"><span class="trait-name">Obsidian Claws.</span> <em>Melee Weapon Attack:</em> +9 to hit. <em>Hit:</em> 1d8 + 5 slashing damage.</div>
+        </div>
+
+        <div class="stat-block">
+            <div class="creature-name">Phase 3: The Unified Mind</div>
+            <div class="creature-type">Large aberration</div>
+            <div class="taper-line"></div>
+            <div class="stat-row"><span class="stat-line">Armor Class</span> <span class="stat-value">22</span></div>
+            <div class="stat-row"><span class="stat-line">Hit Points</span> <span class="stat-value">343</span></div>
+            <div class="taper-line"></div>
+            <div class="trait"><span class="trait-name">Adaptive Morphology.</span> At start of turn, choose one damage type (Acid, Cold, Fire, Lightning, Thunder). Immune to it until next turn.</div>
+            <div class="section-header">Actions</div>
+            <div class="trait"><span class="trait-name">Apex Engulf.</span> Target must make DC 20 Str save or be Grappled/Restrained and take 4d6 Acid damage at start of turn.</div>
+            <div class="trait"><span class="trait-name">De-Bug Protocol.</span> 60ft sphere. Dispel Magic on all targets. Targets take 1d6 psychic damage per spell level ended.</div>
+        </div>
+
+        <h2>The Gods of the Demesne</h2>
+
+        <div class="stat-block" style="border-left-color: #a855f7;">
+            <div class="creature-name" style="color: #d8b4fe;">Gellith (The Nest)</div>
+            <div class="creature-type">Gargantuan aberration (titan)</div>
+            <div class="taper-line"></div>
+            <div class="stat-row"><span class="stat-line">Armor Class</span> <span class="stat-value">25</span></div>
+            <div class="stat-row"><span class="stat-line">Hit Points</span> <span class="stat-value">1000</span></div>
+            <div class="taper-line"></div>
+            <div class="trait"><span class="trait-name">Living Fortress.</span> Attacks against Gellith are attacks against the castle structure itself.</div>
+            <div class="section-header">Actions</div>
+            <div class="trait"><span class="trait-name">Psychic Integration.</span> 300ft radius. Creatures must succeed on a DC 26 Wis save or be Charmed and Incapacitated (joined the collective).</div>
+            <div class="section-header">Legendary Actions</div>
+            <div class="trait"><span class="trait-name">Mimic Spawn.</span> Gellith creates 1d4 Polymimics in unoccupied spaces within 60ft.</div>
+        </div>
+
+        <div class="stat-block" style="border-left-color: #ef4444;">
+            <div class="creature-name" style="color: #fca5a5;">Xy'lorgmath (The Maw)</div>
+            <div class="creature-type">Gargantuan aberration (titan)</div>
+            <div class="taper-line"></div>
+            <div class="stat-row"><span class="stat-line">Armor Class</span> <span class="stat-value">27</span></div>
+            <div class="stat-row"><span class="stat-line">Hit Points</span> <span class="stat-value">950</span></div>
+            <div class="taper-line"></div>
+            <div class="trait"><span class="trait-name">Cosmic Shell.</span> The Maw's true body is the moon itself.</div>
+            <div class="section-header">Actions</div>
+            <div class="trait"><span class="trait-name">Lunar Grasp.</span> The Maw targets 3 creatures within 300ft. DC 26 Str save or be Grappled and Restrained.</div>
+            <div class="trait"><span class="trait-name">Gravity Crush.</span> 20ft radius sphere. Creatures take 10d10 Force damage and fall Prone.</div>
+        </div>
+
+    </div>
+
+    <!-- APPENDIX B-2: TREASURY -->
+    <div id="app-treasury" class="page">
+        <h1>Appendix B-2: The Treasury of Flesh</h1>
+
+        <h2>I. The Currency</h2>
+        <div class="currency-box">
+            <strong style="color: var(--accent-cyan); font-size: 1.1em;">Unstable Animus Core</strong><br>
+            <em style="color: var(--text-muted);">Harvested from: Animus Limbs, Mimics, and Constructs.</em>
+            <p>A glowing blue gland pulsating with bio-electricity.</p>
+            <ul>
+                <li><strong>Value:</strong> Approx. 50gp in Sanctuary.</li>
+                <li><strong>Effect:</strong> Crush to heal 2d4+2 HP (Constructs/Mimics only).</li>
+                <li><strong>Volatile:</strong> Explodes if exposed to fire (1d6 Force, 5ft radius).</li>
+            </ul>
+        </div>
+
+        <h2>II. Sanctuary Shop Inventories</h2>
+
+        <h3>Elara Meadowlight (The Apothecary)</h3>
+        <div class="item-card">
+            <span class="item-name">Stabilized Animus (Potion)</span>
+            <span class="item-type">Cost: 1 Core</span>
+            <p>Regain 2d4+2 HP. Safe to drink (no poison risk).</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Mother's Milk (Elixir)</span>
+            <span class="item-type">Cost: 3 Cores</span>
+            <p>Removes 1 level of Exhaustion or ends the Frightened condition. Tastes like warm ozone.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Stasis Salve</span>
+            <span class="item-type">Cost: 2 Cores</span>
+            <p>Applied to a dying creature. They automatically stabilize and gain 1d8 Temp HP.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Bottled Fog</span>
+            <span class="item-type">Cost: 2 Cores</span>
+            <p>Smash to create a 20ft radius of heavily obscured fog (Gellith's breath) for 1 minute.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Panacea Injection</span>
+            <span class="item-type">Cost: 4 Cores</span>
+            <p>Regain 4d4+4 HP. Cures one Disease.</p>
+        </div>
+
+        <h3>Borin Stonehand (The Blacksmith)</h3>
+        <div class="item-card">
+            <span class="item-name">Whetstone of the Cull</span>
+            <span class="item-type">Cost: 1 Core</span>
+            <p>Apply to a weapon. It deals +1 damage for the next hour. Turns the blade black.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Slag Caltrops (Bag of 20)</span>
+            <span class="item-type">Cost: 2 Cores</span>
+            <p>Cover 5ft square. DC 15 Dex save or 1 piercing + 1d4 Fire damage. Stop movement.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Living Chain (Mod)</span>
+            <span class="item-type">Cost: 3 Cores</span>
+            <p>Attach to a weapon. On a hit, you can pull a Medium/Small target 5ft closer.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Impact Gauntlets</span>
+            <span class="item-type">Cost: 5 Cores</span>
+            <p>Your Unarmed Strikes deal double damage to Objects/Structures.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Reforging Service</span>
+            <span class="item-type">Cost: 5 Cores</span>
+            <p>Transfer a +1 enchantment from a weapon you found to a weapon of your choice.</p>
+        </div>
+
+        <h3>Fizzwick Tanglefoot (General Store)</h3>
+        <div class="item-card">
+            <span class="item-name">Brass Orb (Quest Item)</span>
+            <span class="item-type">Cost: Free</span>
+            <p>Humming mechanical sphere. Delivers secret messages from Thorin.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Glitch Grease</span>
+            <span class="item-type">Cost: 1 Core</span>
+            <p>Covers 10ft square. Difficult terrain. Creatures prone in it teleport 5ft randomly.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Expander Foam</span>
+            <span class="item-type">Cost: 2 Cores</span>
+            <p>Crush to create an instant 5ft cube of spongy, pink cover (AC 10, HP 20).</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Memory Wire</span>
+            <span class="item-type">Cost: 2 Cores</span>
+            <p>Tripwire. If broken, it screams psychically in your mind, alerting you within 1 mile.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">The Mystery Box</span>
+            <span class="item-type">Cost: 4 Cores</span>
+            <p>Roll 1d6. 1-3: Useless junk. 4-5: A Potion of Climbing. 6: A Bag of Holding (that looks like a stomach).</p>
+        </div>
+
+        <h2>III. The Maw Armory (Symbiote Weapons)</h2>
+        <p>Living symbiote weapons gifted by The Bulwark. <strong>Curse:</strong> If you do not kill daily, your max HP reduces by 1d10.</p>
+
+        <div class="maw-box">
+            <strong style="color: #fca5a5;">The Gristle-Grinder (Heavy Weapon)</strong><br>
+            Serrated bone teeth chainsaw. +1 Bonus. On Crit/Kill, make one additional melee attack. Deal +1d6 to unarmored targets.
+        </div>
+        <div class="maw-box">
+            <strong style="color: #fca5a5;">The Arterial Needle (Finesse Weapon)</strong><br>
+            Hollow crystal rapier. +1 Bonus. Advantage vs injured targets. On Sneak Attack, heal for half damage dealt.
+        </div>
+        <div class="maw-box">
+            <strong style="color: #fca5a5;">The Rib-Cage Repeater (Ranged Weapon)</strong><br>
+            Bone bow. Drains 1 HP to fire "Blood Arrows" (Necrotic). On Crit, arrow burrows and explodes next turn (4d6 Necrotic).
+        </div>
+        <div class="maw-box">
+            <strong style="color: #fca5a5;">The Sanguine Rod (Caster Focus)</strong><br>
+            Spine staff. +1 Spell Atk/DC. Overclock: Take 1d8 Necrotic per spell level to Maximize damage dice.
+        </div>
+        <div class="maw-box">
+            <strong style="color: #fca5a5;">The Reactive Carapace (Shield)</strong><br>
+            Chitin shield. Reaction: Bash attackers who miss (1d6+Str damage). Adapts to elemental damage (Resistance).
+        </div>
+
+        <h2>IV. Milestone Rewards & Chapter Loot</h2>
+        <div class="item-card">
+            <span class="item-name">Gloop (The Living Tool)</span>
+            <span class="item-type">Legendary Wondrous Item (Attunement)</span>
+            <p>A sentient ooze. Transforms into Artisan/Thieves Tools. Bonus Action Help action. 1 HP (Fragile). Key to the Good Ending.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Maw's Judgment</span>
+            <span class="item-type">Rare Weapon (Paladin)</span>
+            <p>A living greatsword. +1 Bonus. Dealing Smite damage grants Temp HP.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Caustic Knuckles</span>
+            <span class="item-type">Rare Wondrous Item (Monk)</span>
+            <p>Acid-dripping wraps. Unarmed strikes deal +1d4 Acid damage.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Shifting Dagger</span>
+            <span class="item-type">Rare Weapon (Rogue)</span>
+            <p>A blade of liquid metal. Can change damage type (Piercing/Slashing) as a Bonus Action. +1 Bonus.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Pseudopod Greatsword</span>
+            <span class="item-type">Rare Weapon (Echo Knight)</span>
+            <p>Attacks from your Echo have Reach +5ft.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Bulwark's Carapace</span>
+            <span class="item-type">Rare Heavy Armor</span>
+            <p>Plate armor made of chitin. Critical Hits against you become Normal Hits.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Trapper's Hide</span>
+            <span class="item-type">Wondrous Item (Cloak)</span>
+            <p>Advantage on Stealth checks to hide in rocky terrain. Once per day, blend into stone.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Otyugh's Third Eye</span>
+            <span class="item-type">Wondrous Item (Attunement)</span>
+            <p>Grants Darkvision 60ft. You can cast <em>Detect Magic</em> at will.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">The Thermic Lance</span>
+            <span class="item-type">Rare Weapon (Lance/Spear)</span>
+            <p>Deals Fire damage instead of Piercing. Ignites flammable objects.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Whisper's Cassock</span>
+            <span class="item-type">Rare Robe</span>
+            <p>+1 AC. You can cast <em>Sanctuary</em> on yourself once per day.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Flickering Feathers</span>
+            <span class="item-type">Consumable</span>
+            <p>Consume to gain flight speed for 1 minute (Glitch effect).</p>
+        </div>
+         <div class="item-card">
+            <span class="item-name">Vial of Caustic Bile</span>
+            <span class="item-type">Explosive</span>
+            <p>Thrown explosive. Deals Acid damage in a radius.</p>
+        </div>
+
+        <h2>V. Biological Augmentations (Tattoos)</h2>
+        <p>Living microbial nets that bond to flesh.</p>
+
+        <div class="tattoo-box">
+            <strong style="color: #d8b4fe;">The Dissolution Mark (Uncommon)</strong><br>
+            Spiral on tongue or inner hip. Resistance to Acid. Action (1/Long Rest) to dissolve a non-magical metal/wood object (Medium or smaller) over 1 minute.
+        </div>
+        <div class="tattoo-box">
+            <strong style="color: #d8b4fe;">The Adaptive Shell (Rare)</strong><br>
+            Scales on shin. Reaction (PB/Long Rest) when taking B/P/S damage: Reduce damage by 1d10 + Con mod.
+        </div>
+        <div class="tattoo-box">
+            <strong style="color: #d8b4fe;">The Symbiotic Grip (Rare, Attunement)</strong><br>
+            Tendrils on fist. No Action (3/Long Rest) when you hit with an attack: Target must make DC 14 Str save or Speed reduced by 10 ft.
+        </div>
+        <div class="tattoo-box">
+            <strong style="color: #d8b4fe;">The False Appearance (Uncommon)</strong><br>
+            Shifting ink. Gain Proficiency in Stealth. Add 1d4 to Stealth checks while immobile.
+        </div>
+        <div class="tattoo-box">
+            <strong style="color: #d8b4fe;">The Creator's Insight (Very Rare)</strong><br>
+            Wire circuitry from neck to brainstem. <em>Mending</em> cantrip. Craft non-magical items (poisons/alchemicals) at double speed/quantity.
+        </div>
+        <div class="tattoo-box">
+            <strong style="color: #d8b4fe;">The Resonant Lure (Rare, Attunement)</strong><br>
+            Throat speaker. Mimic any sound perfectly. Cast <em>Minor Illusion</em> (1/Long Rest) that adheres to a target (Disadvantage on Perception/Insight).
+        </div>
+        <div class="tattoo-box">
+            <strong style="color: #d8b4fe;">The Maw's Vigor (Very Rare)</strong><br>
+            Plating on torso. +1 AC. Reaction (1/Long Rest) to swap a damage resistance to Acid, Cold, Fire, or Lightning.
+        </div>
+        <div class="tattoo-box">
+            <strong style="color: #d8b4fe;">The Hunter's Adhesion (Rare, Attunement)</strong><br>
+            Sticky fingers. Adhesive Ammunition: When you hit with a weapon attack (3 Charges/Day): Target Speed reduced by 15 ft.
+        </div>
+        <div class="tattoo-box">
+            <strong style="color: #d8b4fe;">The Unstable Matrix (Very Rare)</strong><br>
+            Spine glyphs. Viscous Casting: Reaction (2 Charges/Day) when casting a spell: Target has Disadvantage on the Saving Throw.
+        </div>
+        <div class="tattoo-box">
+            <strong style="color: #d8b4fe;">The Nest's Embrace (Rare, Attunement)</strong><br>
+            Roots over heart. Advantage vs Charmed/Frightened. Force enemy to re-roll save vs your Charm spells (1/Long Rest).
+        </div>
+        <div class="tattoo-box">
+            <strong style="color: #d8b4fe;">The Flowing Form (Uncommon)</strong><br>
+            Amorphous Step: Disengage prevents all Opportunity Attacks for the turn. Squeeze through 1-inch gaps.
+        </div>
+        <div class="tattoo-box">
+            <strong style="color: #d8b4fe;">The Predator's Scrutiny (Rare)</strong><br>
+            Ring iris in eye. Devour Illusion: +5 to Insight vs Illusions/Shapechangers. 1/Day gain Truesight (30 ft) for 1 min.
+        </div>
+        <div class="tattoo-box">
+            <strong style="color: #d8b4fe;">The Gutter's Claw (Rare, Attunement)</strong><br>
+            Crystalline growths. Caustic Clutch: Proficiency in Athletics. Grappled creatures take 1d6 Acid damage at start of their turn.
+        </div>
+
+        <h2>VI. Gib's Smuggled Goods (Secret Shop)</h2>
+        <div class="item-card">
+            <span class="item-name">K.A.K. "Goblin-B-Gone"</span>
+            <span class="item-type">Consumable (Caltrops)</span>
+            <p>Golden caltrops that scream insults in Draconic. Creatures moving through must succeed on DC 13 Dex save or stop moving. Goblins take double damage.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Concentrated Sunshine</span>
+            <span class="item-type">Consumable (Grenade)</span>
+            <p>A glass orb containing real sunlight. Thrown (30ft). 4d6 Radiant damage (20ft radius). Undead take double damage and are Frightened.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">"Outside" Map</span>
+            <span class="item-type">Quest Item</span>
+            <p>A crumpled map of the real world. Grants Advantage on History checks about reality.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Real Healing Potion</span>
+            <span class="item-type">Consumable</span>
+            <p>Heals 2d4+2 HP. Works inside Anti-Magic fields/Glitch zones.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Flashbang (Debug Grenade)</span>
+            <span class="item-type">Consumable</span>
+            <p>Radius 10ft. DC 14 Con save or Blind/Deafened. Constructs take Disadvantage.</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Skeleton Key</span>
+            <span class="item-type">Consumable</span>
+            <p>Opens any non-magical lock. Breaks after 1 use. (It's actually a master_admin_key.exe).</p>
+        </div>
+        <div class="item-card">
+            <span class="item-name">Music Box</span>
+            <span class="item-type">Quest Item</span>
+            <p>Plays a song from outside. Giving this to an NPC forces a Wisdom Save to break their programming.</p>
+        </div>
+
+    </div>
+
+    <div id="app-music" class="page">
+        <h1>Appendix C: Gib's Musical Tales</h1>
+        <p>In the quiet corners of the Animus Tavern, or amidst the roaring wind of the Wasteland, Gib plays these songs. Some are warnings, some are memories, and some are glitches bleeding through from the other side.</p>
+        
+        <p><strong>DM Note:</strong> Use these tracks to set the mood for specific scenes.</p>
+        
+        <h2>K.A.K. Signature Tracks</h2>
+        <p>The personal anthems of the corporation's most elite agents.</p>
+
+        <div class="song-card">
+            <div class="song-title">17. Holy Fire</div>
+            <div class="song-meta">Tuck's Song | Play during Divine Intervention</div>
+            <div class="song-meta">"A roaring anthem of sunlight and ash. The song that plays when the Friar stops healing and starts purging."</div>
+            <audio controls>
+                <source src="songs/Holy Fire.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="song-card">
+            <div class="song-title">18. Morning Lord</div>
+            <div class="song-meta">Thorne's Song | Play during Thorne's Rage</div>
+            <div class="song-meta">"The heavy, rhythmic beat of the Morninglord's chosen muscle. It's the sound of a 4ft kobold becoming an immovable object."</div>
+            <audio controls>
+                <source src="songs/Morning Lord.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <h2>The Tavern Selection</h2>
+        <p>Play these when the players are safe... or think they are safe.</p>
+
+        <div class="song-card">
+            <div class="song-title">1. Artificer King</div>
+            <div class="song-meta">The Main Theme | Play during Chapter 1 Intro</div>
+            <div class="glitch-text" style="margin:0; padding:5px; font-size:0.8em; border:none; background:none;">"A warning about the man in the rafters. Listen closely to the lyrics about the 'hollow man'."</div>
+            <audio controls>
+                <source src="songs/Artificer King.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="song-card">
+            <div class="song-title">2. Drink Up Your Animus</div>
+            <div class="song-meta">Drinking Song | Play during the Tavern Brawl</div>
+            <div class="song-meta">"A jaunty tune about the horrifying reality of drinking processed monster fluid."</div>
+            <audio controls>
+                <source src="songs/Drink up your Animus.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="song-card">
+            <div class="song-title">3. Tallest Man in the Room</div>
+            <div class="song-meta">Gib's Theme | Play when Gib enters the scene</div>
+            <div class="song-meta">"A funky track about Gib's totally convincing disguise. He is definitely tall. Very tall."</div>
+            <audio controls>
+                <source src="songs/Tallest Man in the Room.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <h2>The Lore & The Glitch</h2>
+        <p>Play these during exposition dumps or moments of psychological horror.</p>
+
+        <div class="song-card">
+            <div class="song-title">4. The Cradle's Lie</div>
+            <div class="song-meta">The Anchor's Theme | Play in the Apothecary</div>
+            <div class="song-meta">"A haunting lullaby. Perfect for when The Anchor (Elara) is trying to convince the party to stay and sleep."</div>
+            <audio controls>
+                <source src="songs/The Cradle's Lie.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="song-card">
+            <div class="song-title">5. Severed Kalashtar</div>
+            <div class="song-meta">Thorin's Backstory | Play in Chapter 4 (The Lab)</div>
+            <div class="song-meta">"A tragic ballad revealing the Creator's true identity and his loss."</div>
+            <audio controls>
+                <source src="songs/Severed Kalashtar.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+        
+        <div class="song-card">
+            <div class="song-title">6. The Broken Record</div>
+            <div class="song-meta">The Glitch Theme | Play during reality breaks</div>
+            <div class="glitch-text" style="margin:0; padding:5px; font-size:0.8em; border:none; background:none;">"It skips. It repeats. It's wrong. Play this when the simulation starts to fail."</div>
+            <audio controls>
+                <source src="songs/The Broken Record.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="song-card">
+            <div class="song-title">10. Father Moon</div>
+            <div class="song-meta">Xy'lorgmath's Lullaby | Play during moments of ominous calm</div>
+            <div class="song-meta">"A somber counterpart to The Cradle's Lie. It speaks of the cold watch of the satellite above."</div>
+            <audio controls>
+                <source src="songs/Father Moon.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="song-card">
+            <div class="song-title">12. Mother Bastion</div>
+            <div class="song-meta">Gellith's Anthem | Play inside the Temple</div>
+            <div class="song-meta">"A hymn of unity and suppression. The song of the Hive Mind calling its children home."</div>
+            <audio controls>
+                <source src="songs/Mother Bastion.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <h2>Battle & The Wastes</h2>
+        <p>Play these during combat or exploration of the dangerous zones.</p>
+
+        <div class="song-card">
+            <div class="song-title">7. Feed the Steel</div>
+            <div class="song-meta">The Armorer's Theme | Play during Boss Fights</div>
+            <div class="song-meta">"Industrial, heavy, and aggressive. The anthem of the Maw faction."</div>
+            <audio controls>
+                <source src="songs/Feed the Steel.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="song-card">
+            <div class="song-title">8. Blue Gold</div>
+            <div class="song-meta">Exploration Theme | Play in the Wasteland</div>
+            <div class="song-meta">"A song about greed and the dangerous hunt for Animus in the grey wastes."</div>
+            <audio controls>
+                <source src="songs/Blue Gold.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="song-card">
+            <div class="song-title">11. Thorin (Battle Theme)</div>
+            <div class="song-meta">The Creator's Wrath | Play during the Final Boss (Phase 1)</div>
+            <div class="song-meta">"The mechanical, grinding anthem of the Creator. A song of judgment and deletion."</div>
+            <audio controls>
+                <source src="songs/Thorin (Battle Theme).mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+        
+        <h2>The Cycle</h2>
+        <p>Play this when resurrection occurs or the players realize they are trapped.</p>
+
+        <div class="song-card">
+            <div class="song-title">9. Roll the Code</div>
+            <div class="song-meta">The Sea Shanty of the Void | Play during Resurrection</div>
+            <div class="song-meta">"A rhythmic, cyclic song about waking up, dying, and rebooting. The anthem of the digital prisoner."</div>
+            <audio controls>
+                <source src="songs/Roll the Code.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="song-card">
+            <div class="song-title">13. Tick of the Trade</div>
+            <div class="song-meta">The Tinkerer's Hustle | Play in Tanglefoot's Curios</div>
+            <div class="song-meta">"A fast-paced, anxious tune for the Tinkerer's shop or a high-stakes negotiation."</div>
+            <audio controls>
+                <source src="songs/Tick of the Trade.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <h2>The Final Chords (The Endings)</h2>
+        <p>Play these tracks during the epilogue, depending on the players' final choice.</p>
+
+        <div class="song-card" style="border-left: 4px solid #10b981;">
+            <div class="song-title" style="color: #10b981;">14. The Golden Payout (Genesis Funk)</div>
+            <div class="song-meta">Ending 1: The Astral Genesis (Good Ending)</div>
+            <div class="song-meta">"A funky, celebratory track. The metal walls turn to gold, the sky turns blue, and the party builds a new world. Victory!"</div>
+            <audio controls>
+                <source src="songs/The Golden Payout (Genesis Funk).mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="song-card" style="border-left: 4px solid #94a3b8;">
+            <div class="song-title" style="color: #94a3b8;">15. The Blue Emergency (Bastion)</div>
+            <div class="song-meta">Ending 2: The Stagnant Cage (Neutral/Anchor Ending)</div>
+            <div class="song-meta">"A cold, orderly hymn. The blast doors seal, the emergency lights hum, and safety is secured... at the cost of freedom."</div>
+            <audio controls>
+                <source src="songs/The Blue Emergency (Bastion).mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="song-card" style="border-left: 4px solid #ef4444;">
+            <div class="song-title" style="color: #ef4444;">16. The Star Eater (The Maw's Ballad)</div>
+            <div class="song-meta">Ending 3: The Infinite Hunger (Evil/Maw Ending)</div>
+            <div class="song-meta">"A chaotic, consuming ballad. The Demesne tears itself free from reality to hunt the stars. You are the monster now."</div>
+            <audio controls>
+                <source src="songs/The Star Eater (The Maw's Ballad).mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+    </div>
+
+    <!-- APPENDIX D: THE FRIAR'S CRUSADE -->
+    <div id="app-tuck" class="page">
+        <h1>Appendix D: The Friar's Crusade</h1>
+        <div class="kak-seal">
+            PROPERTY OF K.A.K.<br>
+            (Kobold Acquisitions Korporated) - SECURITY LEVEL: HIGH PRIEST
+        </div>
+
+        <h2>Character Profile: Friar Tuck</h2>
+        <div class="stat-block">
+            <div class="creature-name">Robert "Friar Tuck" Stafford</div>
+            <div class="creature-type">Human Cleric of Lathander (Light Domain)</div>
+            <div class="taper-line"></div>
+            <div class="stat-row"><span class="stat-line">Title</span> <span class="stat-value">High Priest of the K.A.K. Clergy of Light</span></div>
+            <div class="stat-row"><span class="stat-line">Alignment</span> <span class="stat-value">Chaotic Good (Morally Grey Past, Divine Purpose)</span></div>
+            <div class="stat-row"><span class="stat-line">Divine Scar</span> <span class="stat-value">Permanent Half-HP (The cost of the Nothic's Barrier)</span></div>
+            <div class="taper-line"></div>
+            <div class="trait"><span class="trait-name">Physical Traits.</span> Wears a pristine priestly robe over Gauntlets of Ogre Power. Carries a sun-blessed Flail.</div>
+        </div>
+        
+        <div class="mechanic-box" style="border-left: 4px solid var(--accent-gold);">
+            <h3 style="margin-top:0; color: var(--accent-gold);">K.A.K. Audio Logs</h3>
+            <p><strong>Signature Themes:</strong></p>
+            <ul>
+                <li><strong>"Holy Fire" (Tuck's Theme):</strong> Plays when the Light Domain's wrath is unleashed.</li>
+                <li><strong>"Morning Lord" (Thorne's Theme):</strong> Plays when the Barbarian protector stands between the light and the dark.</li>
+            </ul>
+        </div>
+
+        <h2>Part I: The Mud and The Blood (Origins)</h2>
+        <p>Young Robert grew up in the verdant woodlands surrounding Nottingham, living a simple life of chopping wood and herbalism. His destiny changed at age 14 when he unearthed a muddy, pulsating relic: the symbol of the Morninglord.</p>
+        <p>The tragedy of Nottingham struck when he was 15. Bandits—scourges of the Sherwood roads—raided his hamlet. Forced to watch the execution of his parents, Robert was taken captive. For seven years, he lived as a "Healer in Chains." He refused to lift a blade, only lifting his hands to knit flesh and bone, keeping his captors alive while his soul withered.</p>
+
+        <h2>Part II: The Baptism of Fire (Awakening)</h2>
+        <p>At age 22, the bandits made a fatal error: they tried to plunder a forgotten Temple of Lathander hidden deep within the Nottingham caves. As they entered the sanctuary, the relic around Tuck’s neck grew hot. He approached a dusty relief of the god.</p>
+        <div class="read-aloud">
+            The Voice of Lathander: "Place the symbol in the slot. Bathe yourself in Holy Fire, and be Reborn a True Priest."
+        </div>
+        <p>Tuck obeyed. A divine Sunbeam erupted, incinerating the bandits instantly, turning them to ash. Tuck stood amidst the inferno, untouched, reborn. The wall crumbled to reveal his inheritance: <strong>Gauntlets of Ogre Power</strong> (Granting him the strength to rebuild), <strong>Priest’s Robes of Lathander</strong>, and a <strong>Pristine Holy Relic</strong>.</p>
+
+        <h2>Part III: The Labyrinthia Crusade (Transformation)</h2>
+        <p>After years of rebuilding the Nottingham Cathedral, Lathander opened a portal to Labyrinthia. Tuck stepped through, leaving England for the planes beyond. Here, he met <strong>Thorne</strong>, a hulking 4ft Kobold who would become his fiercest protector.</p>
+        <p>The journey was brutal. A Lich King decimated Tuck’s initial allies, but he was saved by a chaotic party of adventurers (imprisoned for the "Bag of Holding/Nothic Incident").</p>
+        <div class="mechanic-box">
+            <h3 style="margin-top:0; color: #ef4444;">The Divine Scar</h3>
+            <p>Faced with an impassable barrier created by the Nothic (the creator of Labyrinthia), Tuck made the ultimate sacrifice. He offered his vitality to the light.</p>
+            <ul>
+                <li><strong>The Cost:</strong> His Maximum HP was permanently halved.</li>
+                <li><strong>The Reward:</strong> Lathander saw the conviction of his servant. No longer just a healer, Tuck became a vessel of wrath. He lost the gentle touch of the Life Domain and gained the explosive power of the Light Domain. Now, Fireball and Sunburst are his primary prayers.</li>
+            </ul>
+        </div>
+
+        <h2>Part IV: The Corporate Clergy (Current Era)</h2>
+        <p>Victorious and rewarded with new armor and a flail, Tuck returned to his Nottingham Cathedral. There, waiting for him, was Thorne (now a Zealot Barbarian) and a sharp-dressed Kobold named <strong>Gib</strong>.</p>
+        <p>Gib, the CEO of K.A.K. (Kobold Acquisitions Korporated), offered a partnership. Lathander, seeing the potential for spreading the light (and perhaps the chaotic good nature of the enterprise), gave his blessing.</p>
+        <div class="read-aloud">
+            "Robert 'Friar Tuck' Stafford now serves as the spiritual guide and heavy artillery for an interdimensional smuggling and mining corporation. He preaches the Morninglord’s grace while Gib manages the margins."
+        </div>
+
+        <div class="mechanic-box" style="border-left: 4px solid var(--accent-gold);">
+            <h3 style="margin-top:0; color: var(--accent-gold);">Playstyle: The Glass Cannon</h3>
+            <p><strong>The Cost:</strong> Maximum HP is permanently halved.</p>
+            <p><strong>Combat Strategy:</strong> High AC (Heavy Armor + Gauntlets) and massive damage potential (Fireball/Sunbeam), but fragile vitality. If you get hit, you go down fast.</p>
+            <p><strong>Roleplay Hook:</strong> You are fearless not because you are strong, but because you have already died once (symbolically). You walk into danger calmly, knowing Thorne will intercept attacks, while you prepare to level the building.</p>
+        </div>
+
+        <div class="mechanic-box">
+            <h3 style="margin-top:0; color: var(--accent-cyan);">The K.A.K. Dynamic Duo</h3>
+            <p><strong>Thorne (The Muscle):</strong> A 4ft tall Kobold Zealot Barbarian. He likely believes Tuck is the physical avatar of a god due to the explosions he causes. He protects Tuck's fragile (half-HP) body with his life.</p>
+            <p><strong>Gib (The Brains):</strong> A 2.5ft tall Kobold in a tailored three-piece suit. He handles the contracts, the mining rights, and the smuggling routes. He likely lists Tuck’s "Holy Fire" as a tax-deductible demolition expense.</p>
+        </div>
+    </div>
+
+</body>
+</html>
