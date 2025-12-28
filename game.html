@@ -22,11 +22,17 @@
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 1;
             border: none;
+            transition: filter 0.3s;
+        }
+        
+        /* Blur background when menu is open */
+        body.menu-open #layer-world {
+            filter: blur(5px) brightness(0.4);
         }
 
         #layer-ui {
             position: absolute;
-            top: 50px; left: 50px; right: 50px; bottom: 50px;
+            top: 40px; left: 40px; right: 40px; bottom: 40px;
             z-index: 10;
             pointer-events: none; /* Let clicks pass through to map when UI is hidden */
             display: flex;
@@ -43,17 +49,15 @@
             border-radius: 12px;
             pointer-events: auto; /* Re-enable clicks for the app */
             display: none; /* Hidden by default */
-            transition: opacity 0.2s;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.3s, transform 0.3s;
         }
 
         .app-frame.active {
             display: block;
-            animation: bootUp 0.3s ease-out;
-        }
-
-        @keyframes bootUp {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+            opacity: 1;
+            transform: scale(1);
         }
 
         /* --- HUD --- */
@@ -66,41 +70,49 @@
 
         .npc-comms {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
-            width: 350px;
-            background: rgba(15, 23, 42, 0.9);
+            bottom: 30px;
+            left: 30px;
+            width: 400px;
+            background: rgba(15, 23, 42, 0.95);
             border-left: 4px solid #F59E0B; /* Gib Gold */
-            padding: 15px;
+            padding: 20px;
             color: #F8FAFC;
-            font-size: 0.9rem;
-            transform: translateY(150%);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.95rem;
+            transform: translateX(-150%);
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
+            border-radius: 0 8px 8px 0;
         }
 
         .npc-comms.active {
-            transform: translateY(0);
+            transform: translateX(0);
         }
 
-        .npc-name { font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block; }
+        .npc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
+        .npc-name { font-weight: bold; text-transform: uppercase; font-size: 1.1rem; }
+        
         .npc-gib { border-color: #F59E0B; }
         .npc-gib .npc-name { color: #F59E0B; }
+        
         .npc-thorne { border-color: #EF4444; }
         .npc-thorne .npc-name { color: #EF4444; }
+        
         .npc-tuck { border-color: #38BDF8; }
         .npc-tuck .npc-name { color: #38BDF8; }
 
         #interaction-prompt {
             position: absolute;
-            top: 60%;
+            top: 65%;
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.2);
             color: white;
             padding: 8px 16px;
             border-radius: 4px;
             opacity: 0;
             transition: opacity 0.2s;
+            text-align: center;
         }
 
         #hotbar {
@@ -115,25 +127,30 @@
             background: rgba(15, 23, 42, 0.8);
             border: 1px solid #334155;
             color: #94A3B8;
-            padding: 5px 10px;
+            padding: 5px 12px;
             font-size: 0.8rem;
             border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .hotkey span { color: #fff; font-weight: bold; }
+        .hotkey span { color: #fff; font-weight: bold; font-size: 1.1rem; }
 
     </style>
 </head>
 <body>
 
     <!-- LAYER 1: THE GAME WORLD -->
-    <iframe id="layer-world" src="map.html"></iframe>
+    <!-- Allow microphone/camera permissions if apps need them -->
+    <iframe id="layer-world" src="map.html" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
 
-    <!-- LAYER 2: APP OVERLAYS -->
+    <!-- LAYER 2: APP OVERLAYS (Preloaded) -->
     <div id="layer-ui">
         <iframe id="app-sheet" class="app-frame" src="sheet.html"></iframe>
         <iframe id="app-tome" class="app-frame" src="tome.html"></iframe>
         <iframe id="app-loot" class="app-frame" src="loot.html"></iframe>
         <iframe id="app-campaign" class="app-frame" src="campaign.html"></iframe>
+        <!-- Token/Homebrew/Compendium could be added here if needed -->
     </div>
 
     <!-- LAYER 3: HUD -->
@@ -142,14 +159,20 @@
             <div class="hotkey"><span>TAB</span> SHEET</div>
             <div class="hotkey"><span>I</span> LOOT</div>
             <div class="hotkey"><span>C</span> COMBAT</div>
-            <div class="hotkey"><span>ESC</span> CLOSE</div>
+            <div class="hotkey"><span>L</span> LORE</div>
+            <div class="hotkey"><span>ESC</span> BACK</div>
         </div>
 
-        <div id="interaction-prompt">PRESS [E] TO INTERACT</div>
+        <div id="interaction-prompt">
+            <div style="font-size: 1.2rem; font-weight: bold; color: #fbbf24;">[E]</div>
+            <span id="prompt-text">INTERACT</span>
+        </div>
 
         <!-- NPC COMMS BOX -->
         <div id="npc-box" class="npc-comms npc-gib">
-            <span class="npc-name" id="npc-name">Gib</span>
+            <div class="npc-header">
+                <span class="npc-name" id="npc-name">Gib</span>
+            </div>
             <div id="npc-text">System initialization complete. Welcome back to the Demesne, Subject 44.</div>
         </div>
     </div>
@@ -161,10 +184,10 @@
         const npcName = document.getElementById('npc-name');
         const npcText = document.getElementById('npc-text');
         const prompt = document.getElementById('interaction-prompt');
+        const promptText = document.getElementById('prompt-text');
 
         let activeApp = null;
-        let isMenuOpen = false;
-
+        
         // --- NPC SYSTEM ---
         const NPCs = {
             GIB: { name: 'Gib (Handler)', class: 'npc-gib' },
@@ -172,15 +195,14 @@
             TUCK: { name: 'Tuck (Dev)', class: 'npc-tuck' }
         };
 
-        function speak(npc, text, duration = 5000) {
+        function speak(npc, text, duration = 6000) {
             npcBox.className = `npc-comms ${npc.class} active`;
             npcName.innerText = npc.name;
             npcText.innerText = text;
             
-            // Audio sting (short beep)
-            // const audio = new Audio('assets/beep.mp3'); audio.play().catch(e=>{});
-
-            setTimeout(() => {
+            // Auto hide after duration
+            if (window.npcTimeout) clearTimeout(window.npcTimeout);
+            window.npcTimeout = setTimeout(() => {
                 npcBox.classList.remove('active');
             }, duration);
         }
@@ -188,39 +210,50 @@
         // --- APP MANAGER ---
         function toggleApp(appName) {
             const app = document.getElementById(`app-${appName}`);
-            
+            if (!app) return;
+
             if (activeApp === appName) {
                 // Close current
                 app.classList.remove('active');
                 activeApp = null;
-                isMenuOpen = false;
+                document.body.classList.remove('menu-open');
+                
+                // Tell Map to resume
                 worldFrame.contentWindow.postMessage({ type: 'RESUME_GAME' }, '*');
-                worldFrame.focus();
+                
+                // Refocus map so controls work immediately
+                setTimeout(() => worldFrame.contentWindow.focus(), 100);
             } else {
-                // Close others
+                // Close others first
                 document.querySelectorAll('.app-frame').forEach(el => el.classList.remove('active'));
                 
                 // Open new
                 app.classList.add('active');
                 activeApp = appName;
-                isMenuOpen = true;
+                document.body.classList.add('menu-open');
                 
-                // Pause Game World
+                // Tell Map to pause (unlock mouse)
                 worldFrame.contentWindow.postMessage({ type: 'PAUSE_GAME' }, '*');
                 
                 // Contextual Dialogue
-                if(appName === 'loot') speak(NPCs.GIB, "I've got new stock. Don't ask where it came from.", 3000);
-                if(appName === 'tome') speak(NPCs.THORNE, "Combat protocols engaged. Hit 'em hard, Boss.", 3000);
-                if(appName === 'sheet') speak(NPCs.TUCK, "Checking your vitals. You look... mostly solid.", 3000);
+                if(appName === 'loot') speak(NPCs.GIB, "I've secured some new assets. Prices are... flexible.", 3000);
+                if(appName === 'tome') speak(NPCs.THORNE, "Threat assessment active. Ready to break some bones, boss.", 3000);
+                if(appName === 'sheet') speak(NPCs.TUCK, "Running diagnostics on your avatar. Don't die on me.", 3000);
+                if(appName === 'campaign') speak(NPCs.TUCK, "Accessing historical archives. History is just data, right?", 3000);
             }
         }
 
         // --- INPUT HANDLER ---
+        // Listen for keys on the MAIN window (this file)
         document.addEventListener('keydown', (e) => {
             // Prevent default browser search/find
-            if(e.key === 'Tab') { e.preventDefault(); toggleApp('sheet'); }
+            if(e.key === 'Tab') { 
+                e.preventDefault(); 
+                toggleApp('sheet'); 
+            }
             if(e.key.toLowerCase() === 'i') { toggleApp('loot'); }
             if(e.key.toLowerCase() === 'c') { toggleApp('tome'); }
+            if(e.key.toLowerCase() === 'l') { toggleApp('campaign'); }
             if(e.key === 'Escape') { 
                 if(activeApp) toggleApp(activeApp); // Close active
             }
@@ -232,7 +265,7 @@
 
             if (data.type === 'INTERACTION_AVAILABLE') {
                 prompt.style.opacity = data.available ? '1' : '0';
-                prompt.innerText = `PRESS [E] TO ${data.label || 'INTERACT'}`;
+                promptText.innerText = data.label || 'INTERACT';
             }
 
             if (data.type === 'TRIGGER_EVENT') {
@@ -242,12 +275,17 @@
                 }
                 if (data.kind === 'LOOT') {
                     toggleApp('loot');
-                    speak(NPCs.GIB, "Found a cache. Let's see what's inside.", 3000);
+                    speak(NPCs.GIB, "Hidden cache detected. Opening interface.", 3000);
                 }
                 if (data.kind === 'LORE') {
                     toggleApp('campaign');
                     speak(NPCs.TUCK, "Decrypting localized data fragment...", 3000);
                 }
+            }
+            
+            // Handle requests from inside apps to close themselves
+            if (data.type === 'CLOSE_APP') {
+                if (activeApp) toggleApp(activeApp);
             }
         });
 
